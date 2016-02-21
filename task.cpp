@@ -10,6 +10,16 @@ using namespace std;
 // Maximum bytes
 const unsigned long STDIN_MAX = 1000000;
 
+
+
+//Here are the routes
+const string HOME = "/";
+const string IMAGES = "/images/";
+const int HOME_ID = 0;
+const int IMAGES_ID = 1;
+const int ERROR_ID = -1;
+
+
 /**
  * Note this is not thread safe due to the static allocation of the
  * content_buffer.
@@ -73,6 +83,9 @@ public:
         content = get_request_content(request);
 
     }
+    string get_uri(){
+        return uri;
+    }
 
     void print_infos(ostream & stream){
 
@@ -94,6 +107,63 @@ private :
 
 };
 
+
+int find_route(string uri){
+
+    if(uri.compare(IMAGES)==0){
+        return IMAGES_ID;
+    }else if(uri.compare(HOME)==0){
+        return HOME_ID;
+    }
+
+    return -1;
+
+
+}
+
+
+
+void error_function(){
+
+    cout << "Status: 404\r\n"
+         << "Content-type: text/html\r\n"
+         << "\r\n"
+         << "<html><body>Not Found</body></html>\n";
+
+}
+
+void home_function(){
+
+
+
+
+    cout << "Content-type: text/html\r\n"
+         << "\r\n"
+         << "<html>\n"
+         << "  <head>\n"
+         << "    <title>Hello, World!</title>\n"
+         << "  </head>\n"
+         << "  <body>\n"
+         << "  Hello, World!</body>\n"
+         << "</html>\n";
+
+}
+
+void images_function(){
+
+
+    cout << "Content-type: text/html\r\n"
+         << "\r\n"
+         << "<html>\n"
+         << "  <head>\n"
+         << "    <title>Section Images !</title>\n"
+         << "  </head>\n"
+         << "  <body>"
+            "   Section Images !\n"
+         << "  </body>\n"
+         << "</html>\n";
+
+}
 
 int main(void) {
     // Backup the stdio streambufs
@@ -125,12 +195,6 @@ int main(void) {
         cout.rdbuf(&cout_fcgi_streambuf);
         cerr.rdbuf(&cerr_fcgi_streambuf);
 
-        /**printf(method);
-        printf(" ");
-        printf(from);
-        printf(" url : ");
-        printf(uri);
-        printf("\n");*/
 
         NodeRequest curr_request(request);
 
@@ -139,20 +203,37 @@ int main(void) {
 
         string content = get_request_content(request);
 
-        if (content.length() == 0) {
-            content = ", World!";
+
+        int route =  find_route(curr_request.get_uri());
+
+
+
+        switch(route){
+
+        case HOME_ID:
+
+            home_function();
+
+            break;
+
+
+        case IMAGES_ID:
+
+            images_function();
+
+            break;
+
+        default:
+
+            error_function();
+
+            break;
+
+
+
         }
-        cerr<<"go for it"<<endl;
-        cout << "Content-type: text/html\r\n"
-             << "\r\n"
-             << "<html>\n"
-             << "  <head>\n"
-             << "    <title>Hello, World!</title>\n"
-             << "  </head>\n"
-             << "  <body>\n"
-             << "    <h1>Hello " << content << " from " << " !</h1>\n"
-             << "  </body>\n"
-             << "</html>\n";
+
+
 
         // Note: the fcgi_streambuf destructor will auto flush
     }
