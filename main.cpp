@@ -1,8 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "fcgio.h"
 
 #include "request.h"
+#include "response.h"
 
 using namespace std;
 
@@ -34,21 +36,25 @@ int main(void) {
         cerr.rdbuf(&cerr_fcgi_streambuf);
 
         NodeCpp::Request curr_request(request);
+        NodeCpp::Response curr_response(cout);
+
+        stringstream response_stream;
+        response_stream << "<html>\n"
+                        << "  <head>\n"
+                        << "    <title>Hello, World!</title>\n"
+                        << "  </head>\n"
+                        << "  <body>\n"
+                        << "    <h1>Hello World !</h1>\n"
+                        << "  </body>\n"
+                        << "</html>\n";
+
+        curr_response.SetStatusCode(200, "OK");
+        curr_response.SetContent(response_stream.str());
+
+        curr_response.Send();
 
         curr_request.print_infos(file_log);
         curr_request.print_infos(console_log);
-
-        cerr<<"go for it"<<endl;
-        cout << "Content-type: text/html\r\n"
-             << "\r\n"
-             << "<html>\n"
-             << "  <head>\n"
-             << "    <title>Hello, World!</title>\n"
-             << "  </head>\n"
-             << "  <body>\n"
-             << "    <h1>Hello World !</h1>\n"
-             << "  </body>\n"
-             << "</html>\n";
 
         // Note: the fcgi_streambuf destructor will auto flush
     }

@@ -10,6 +10,12 @@ all: $(EXEC)
 main: $(OBJ)
 	@$(CC) -o $@ $^ $(LDFLAGS)
 
+main.o: request.h response.h
+
+request.o: request.h
+
+response.o: response.h
+
 %.o: %.cpp
 	@$(CC) -o $@ -c $< $(CFLAGS)
 

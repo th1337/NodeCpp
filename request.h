@@ -24,4 +24,4 @@ namespace NodeCpp
 	};
 }
 
-#endif
+#endif // REQUEST_H
