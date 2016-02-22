@@ -21,6 +21,8 @@ namespace NodeCpp
 
         Response HtmlHelloWorld(const Request& request);
         Response HtmlHelloWorldNominative(const Request& request);
+
+
     };
 }
 

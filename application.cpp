@@ -7,7 +7,7 @@
 using namespace std;
 using namespace NodeCpp;
 
-Application::Application() : cin_streambuf_(nullptr), cout_streambuf_(nullptr), cerr_streambuf_(nullptr)
+Application::Application() : cin_streambuf_(nullptr), cout_streambuf_(nullptr), cerr_streambuf_(nullptr), console(cout.rdbuf())
 {
 
 }

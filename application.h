@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <ostream>
 #include "controller.h"
 #include "fcgio.h"
 #include "response.h"
@@ -36,6 +37,9 @@ namespace NodeCpp
         streambuf * cin_streambuf_;
         streambuf * cout_streambuf_;
         streambuf * cerr_streambuf_;
+
+
+        ostream console;
 
         //radix tree
         RadixUrlTree url_tree_;
