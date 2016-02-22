@@ -72,6 +72,7 @@ public:
         const char * remoteR = FCGX_GetParam("REMOTE_ADDR", request.envp);
         const char * remote_portR = FCGX_GetParam("REMOTE_PORT", request.envp);
         const char * server_portR = FCGX_GetParam("SERVER_PORT", request.envp);
+        const char * query_stringR = FCGX_GetParam("QUERY_STRING", request.envp);
 
 
         uri.assign(uriR, strlen(uriR));
@@ -79,6 +80,7 @@ public:
         remote.assign(remoteR, strlen(remoteR));
         remote_port = atoi(remote_portR);
         server_port = atoi(server_portR);
+        query_string.assign(query_stringR);
 
         content = get_request_content(request);
 
@@ -89,7 +91,7 @@ public:
 
     void print_infos(ostream & stream){
 
-        stream<<method<<" "<<remote<<":"<<remote_port<<" "<<uri<<":"<<server_port<<" content : "<<content<<endl;
+        stream<<method<<" "<<remote<<":"<<remote_port<<" "<<uri<<":"<<server_port<<" query args "<<query_string<<" content : "<<content<<endl;
 
 
 
@@ -100,6 +102,7 @@ private :
     string content;
     string uri;
     string remote;
+    string query_string;
     int server_port;
     int remote_port;
 
