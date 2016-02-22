@@ -13,7 +13,7 @@ Application::Application() : cin_streambuf_(nullptr), cout_streambuf_(nullptr), 
 
 Application::~Application()
 {
-	// Restore stdio streambufs
+    // Restore stdio streambufs
     cin.rdbuf(cin_streambuf_);
     cout.rdbuf(cout_streambuf_);
     cerr.rdbuf(cerr_streambuf_);
@@ -21,8 +21,8 @@ Application::~Application()
 
 void Application::Init()
 {
-	// Backup the stdio streambufs
-	cin_streambuf_  = cin.rdbuf();
+    // Backup the stdio streambufs
+    cin_streambuf_  = cin.rdbuf();
     cout_streambuf_ = cout.rdbuf();
     cerr_streambuf_ = cerr.rdbuf();
 
@@ -33,9 +33,9 @@ void Application::Init()
 
 void Application::Run()
 {
-	while (FCGX_Accept_r(&request_) == 0)
-	{
-		fcgi_streambuf cin_fcgi_streambuf(request_.in);
+    while (FCGX_Accept_r(&request_) == 0)
+    {
+        fcgi_streambuf cin_fcgi_streambuf(request_.in);
         fcgi_streambuf cout_fcgi_streambuf(request_.out);
         fcgi_streambuf cerr_fcgi_streambuf(request_.err);
 
@@ -43,15 +43,15 @@ void Application::Run()
         cout.rdbuf(&cout_fcgi_streambuf);
         cerr.rdbuf(&cerr_fcgi_streambuf);
 
-    	ProcessRequest();
+        ProcessRequest();
 
         // Note: the fcgi_streambuf destructor will auto flush
-	}
+    }
 }
 
 void Application::ProcessRequest()
 {
-	NodeCpp::Request curr_request(request_);
+    NodeCpp::Request curr_request(request_);
     NodeCpp::Response curr_response(cout);
 
     stringstream response_stream;
