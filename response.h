@@ -11,15 +11,13 @@ namespace NodeCpp
     class Response
     {
     public:
-        Response(ostream &output_stream);
+        Response();
         void SetStatusCode(int status_code, const string& status_text = "");
         void SetHeader(const string& name, const string& value);
         void SetContent(const string& content);
-        void Send();
+        void Send(ostream& output_stream);
 
     private :
-        ostream& output_stream_;
-
         int status_code_;
         string status_text_;
         map<string, string> headers_;

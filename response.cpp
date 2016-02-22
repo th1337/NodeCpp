@@ -3,7 +3,7 @@
 using namespace std;
 using namespace NodeCpp;
 
-Response::Response(ostream& output_stream) : output_stream_(output_stream), status_code_(200), status_text_("OK"), headers_(), content_("")
+Response::Response() : status_code_(200), status_text_("OK"), headers_(), content_("")
 {
 
 }
@@ -44,14 +44,14 @@ void Response::SetContent(const string& content)
     content_ = content;
 }
 
-void Response::Send()
+void Response::Send(ostream& output_stream)
 {
-    output_stream_ << "Status: " << status_code_ << " " << status_text_ << "\r\n";
+    output_stream << "Status: " << status_code_ << " " << status_text_ << "\r\n";
     //Headers
     for (map<string, string>::const_iterator it_header = headers_.begin();it_header != headers_.end();++it_header)
     {
-        output_stream_ << it_header->first << ": " << it_header->second << "\r\n";
+        output_stream << it_header->first << ": " << it_header->second << "\r\n";
     }
-    output_stream_ <<  "\r\n";
-    output_stream_ << content_;
+    output_stream <<  "\r\n";
+    output_stream << content_;
 }
