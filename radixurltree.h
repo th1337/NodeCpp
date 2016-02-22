@@ -5,54 +5,17 @@
 #include <string.h>
 #include <map>
 
-struct RadixNode;
-
-
-struct RadixEdge{
-
-    std::string label;
-    bool isparam;
-
-    RadixNode* target_node;
-
-};
-
-
-struct RadixNode{
-
-    bool isleaf;
-    int leaf_id;
-
-    bool is_leaf(){
-
-        return isleaf;
-    }
-
-    std::vector<RadixEdge*> edges;
-
-};
-
-
-
-struct RadixAnalyse{
-
-    RadixNode* node;
-    int index;
-    bool found;
-    int code;
-    std::map<std::string, std::string> args;
-
-};
-
-
-
+using namespace std;
 
 
 class RadixUrlTree {
 
 public:
-    void insert(std::string URL, int code);
-    RadixAnalyse* find_url(std::string url);
+
+    class RadixAnalyse;
+
+    void Insert(string URL, int code);
+    RadixAnalyse FindUrl(string url);
 
 
     RadixUrlTree();
@@ -60,15 +23,55 @@ public:
 
 
 
+
 private:
-    RadixAnalyse* search(std::string* url, int size, bool grab_arguments);
+    RadixAnalyse Search(string* url, int size, bool grab_arguments);
 
+    class RadixNode;
+    class RadixEdge;
 
-    RadixNode root;
-    std::vector<RadixNode*> structure;
+    RadixNode* root_;
+    vector<RadixNode> structure_;
 
 
 
 };
+
+class RadixUrlTree::RadixEdge{
+public:
+    string label_;
+    bool is_param_;
+
+    RadixUrlTree::RadixNode* target_node_;
+
+};
+
+
+class RadixUrlTree::RadixNode{
+public:
+    bool is_leaf_;
+    int leaf_id_;
+
+    bool is_leaf(){
+
+        return is_leaf_;
+    }
+
+    vector<RadixUrlTree::RadixEdge> edges_;
+
+};
+
+
+
+class RadixUrlTree::RadixAnalyse{
+public:
+    RadixUrlTree::RadixNode* node_;
+    int index_;
+    bool found_;
+    int code_;
+    map<std::string, string> args_;
+
+};
+
 
 #endif // RADIXURLTREE_H

@@ -1,38 +1,28 @@
 #include "radixurltree.h"
-
+#include <iostream>
 using namespace std;
+const int RESERVE_URL = 1000;
 
 RadixUrlTree::RadixUrlTree() {
 
-    root.isleaf = true;
-    root.leaf_id = 0;
-
-
+    RadixNode root;
+    root.is_leaf_ = true;
+    root.leaf_id_ = 0;
+    structure_.reserve(RESERVE_URL);
+    structure_.push_back(root);
+    this->root_ = & (structure_[0]);
 
 }
 
 
 RadixUrlTree::~RadixUrlTree() {
 
-    for(int i=0; i<structure.size(); i++){
-
-        RadixNode* curr = structure[i];
-
-        for(int j=0; j<curr->edges.size(); j++){
-
-            delete curr->edges[i];
-        }
-
-        delete curr;
-
-    }
-
-
-
 }
 
 
-pair<string*,int> split_url(string s) {
+
+
+pair<string*,int> SplitUrl(string s) {
 
 
     std::string delimiter = "/";
@@ -56,7 +46,7 @@ pair<string*,int> split_url(string s) {
 
     string* res = new string[tokens.size()];
 
-    for(int i=0; i<tokens.size(); i++){
+    for(unsigned int i=0; i<tokens.size(); i++){
         res[i] = tokens[i];
     }
 
@@ -77,8 +67,8 @@ string get_param_name(string param) {
 }
 
 
-RadixAnalyse* RadixUrlTree::search(string* url, int size, bool grab_arguments) {
-    RadixNode * curr = &root;
+RadixUrlTree::RadixAnalyse RadixUrlTree::Search(string* url, int size, bool grab_arguments) {
+    RadixNode * curr = root_;
     int index = 0;
     bool found = true;
     map<string, string> args;
@@ -87,23 +77,23 @@ RadixAnalyse* RadixUrlTree::search(string* url, int size, bool grab_arguments) {
 
         found = false;
 
-        for(int i=0; i<curr->edges.size() && !found ; i++){
+        for(unsigned int i=0; i<curr->edges_.size() && !found ; i++){
 
-            RadixEdge* edge = curr->edges[i];
+            RadixEdge edge = curr->edges_[i];
 
 
 
-            if(edge->label.compare(url[index])==0){ // we have found where to go !
+            if(edge.label_.compare(url[index])==0){ // we have found where to go !
                 found = true;
-                curr = edge->target_node;
+                curr = edge.target_node_;
                 index++;
 
-            }else if(grab_arguments && edge->isparam){
-                string param_name = get_param_name(edge->label);
+            }else if(grab_arguments && edge.is_param_){
+                string param_name = get_param_name(edge.label_);
                 args[param_name] = url[index];
 
                 found = true;
-                curr = edge->target_node;
+                curr = edge.target_node_;
                 index++;
 
 
@@ -114,10 +104,10 @@ RadixAnalyse* RadixUrlTree::search(string* url, int size, bool grab_arguments) {
 
     }
 
-    RadixAnalyse* result = new RadixAnalyse;
-    result->args = args;
-    result->index = index;
-    result->node = curr;
+    RadixAnalyse result;
+    result.args_ = args;
+    result.index_ = index;
+    result.node_ = curr;
 
     return result;
 
@@ -125,68 +115,71 @@ RadixAnalyse* RadixUrlTree::search(string* url, int size, bool grab_arguments) {
 }
 
 
-void RadixUrlTree::insert(string URL, int code) {
+void RadixUrlTree::Insert(string URL, int code) {
 
-    pair<string*, int> split = split_url(URL);
+    pair<string*, int> split = SplitUrl(URL);
 
     string* url = split.first;
     int size = split.second;
 
-    RadixAnalyse* res = search(url, size, false);
+    RadixAnalyse res = Search(url, size, false);
 
 
-    RadixNode* curr = res->node;
+    RadixNode* curr = res.node_;
 
 
 
-    for(int i=res->index; i<size; i++) { //we insert our word
+    for(int i=res.index_; i<size; i++) { //we insert our word
 
-        RadixNode* node = new RadixNode;
-        node->isleaf = false;
+        RadixNode node;
+        node.is_leaf_ = false;
+        structure_.push_back(node);
+        RadixNode* node_pointer = &(structure_[structure_.size()-1]);
 
-        RadixEdge* edge = new RadixEdge;
-        edge->label = url[i];
+
+        RadixEdge edge;
+        curr->edges_.push_back(edge);
+
+        RadixEdge* edge_pointer = &(curr->edges_[curr->edges_.size()-1]);
+
+        edge_pointer->label_ = url[i];
+
         if(url[i].at(0)=='{' && url[i].at(url[i].length()-1)=='}'){//we have a parameter
 
-            edge->isparam=true;
+
+            edge_pointer->is_param_ = true;
         }else{
-            edge->isparam = false;
+            edge_pointer->is_param_ = false;
         }
-        edge->target_node = node;
+        edge_pointer->target_node_ = node_pointer;
 
+        curr = node_pointer;
 
-        curr->edges.push_back(edge);
-
-        structure.push_back(node);
-
-        curr = node;
 
     }
-    curr->isleaf = true;
-    curr->leaf_id = code;
-
-    delete res; // we free the memory allocated for the analyse
-
+    curr->is_leaf_ = true;
+    curr->leaf_id_ = code;
 
 
 
 }
 
-RadixAnalyse* RadixUrlTree::find_url(string url) {
+RadixUrlTree::RadixAnalyse RadixUrlTree::FindUrl(string url) {
 
 
-    pair<string*, int> split = split_url(url);
+    pair<string*, int> split = SplitUrl(url);
 
-    RadixAnalyse* res = search(split.first, split.second, true);
+    RadixAnalyse res = Search(split.first, split.second, true);
 
     delete [] split.first;
-    if(res->index ==  split.second && res->node->isleaf){
-        res->code = res->node->leaf_id;
-        res->found = true;
+    if(res.index_ ==  split.second && res.node_->is_leaf_){
+        res.code_ = res.node_->leaf_id_;
+        res.found_ = true;
         return res;
     }
 
-    res->found=false;
+    res.found_ = false;
+    res.code_ = -1;
     return res;
 
 }
