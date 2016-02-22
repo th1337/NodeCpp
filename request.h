@@ -2,6 +2,7 @@
 #define REQUEST_H
 
 #include <iostream>
+#include <map>
 #include "fcgio.h"
 
 using namespace std;
@@ -12,6 +13,9 @@ namespace NodeCpp
     {
     public:
         Request(FCGX_Request &request);
+        inline string GetUri(){return uri;}
+        string GetParameter(string parameter_name);
+        inline void SetParameters(map<string, string> parameters){params = parameters;}
         void print_infos(ostream &stream);
 
     private :
@@ -21,6 +25,7 @@ namespace NodeCpp
         string remote;
         int server_port;
         int remote_port;
+        map<string, string> params;
     };
 }
 

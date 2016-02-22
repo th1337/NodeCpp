@@ -69,3 +69,24 @@ void Request::print_infos(ostream &stream)
 {
     stream << method << " " << remote << ":" << remote_port << " " << uri << ":" << server_port << " content : " << content << endl;
 }
+
+string Request::GetParameter(string parameter_name)
+{
+    map<string,string>::iterator it = params.find(parameter_name);
+
+    if(it!=params.end()){
+        return *it;
+    }
+
+    return "";
+}
+
+
+
+
+
+
+
+
+
+
