@@ -49,6 +49,7 @@ int main(void) {
                         << "</html>\n";
 
         curr_response.SetStatusCode(200, "OK");
+        curr_response.SetHeader("Content-Type", "text/html");
         curr_response.SetContent(response_stream.str());
 
         curr_response.Send();
