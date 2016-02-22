@@ -7,7 +7,7 @@
 using namespace std;
 using namespace NodeCpp;
 
-Application::Application() : cin_streambuf_(nullptr), cout_streambuf_(nullptr), cerr_streambuf_(nullptr), request_()
+Application::Application() : cin_streambuf_(nullptr), cout_streambuf_(nullptr), cerr_streambuf_(nullptr)
 {
 
 }
@@ -20,6 +20,24 @@ Application::~Application()
     cerr.rdbuf(cerr_streambuf_);
 }
 
+void Application::AddRoute(string url, ControllerAction funct, Controller* controller)
+{
+    //insertion of the route in the tree
+    int code = routes_.size();
+    url_tree_.Insert(url, code);
+    routes_.push_back(make_pair(funct, controller));
+}
+
+
+void Application::InitRoutes()
+{
+   //Here add the routes
+   AddRoute("/", &Controller::HtmlHelloWorld, &hello_controller);
+   AddRoute("hello/{name}/world", &Controller::HtmlHelloWorldNominative, &hello_controller);
+
+
+}
+
 void Application::Init()
 {
     // Backup the stdio streambufs
@@ -27,27 +45,26 @@ void Application::Init()
     cout_streambuf_ = cout.rdbuf();
     cerr_streambuf_ = cerr.rdbuf();
 
+    //Controllers init
+    hello_controller.Init();
+
+    InitRoutes();
+
     //FastCGI init.
     FCGX_Init();
-    FCGX_InitRequest(&request_, 0, 0);
-}
+    FCGX_InitRequest(&fgci_request_, 0, 0);
 
-void Application::AddRoute(string url, route_function funct)
-{
-    //insertion of the route in the tree
-    int code = routes.size();
-    url_tree_.Insert(url, code);
-    routes.push_back(funct);
-}
 
+
+}
 
 void Application::Run()
 {
-    while (FCGX_Accept_r(&request_) == 0)
+    while (FCGX_Accept_r(&fgci_request_) == 0)
     {
-        fcgi_streambuf cin_fcgi_streambuf(request_.in);
-        fcgi_streambuf cout_fcgi_streambuf(request_.out);
-        fcgi_streambuf cerr_fcgi_streambuf(request_.err);
+        fcgi_streambuf cin_fcgi_streambuf(fgci_request_.in);
+        fcgi_streambuf cout_fcgi_streambuf(fgci_request_.out);
+        fcgi_streambuf cerr_fcgi_streambuf(fgci_request_.err);
 
         cin.rdbuf(&cin_fcgi_streambuf);
         cout.rdbuf(&cout_fcgi_streambuf);
@@ -63,34 +80,32 @@ void Application::Run()
 void Application::ProcessRequest()
 {
 
-    NodeCpp::Request curr_request(request_);
-    NodeCpp::Response curr_response(cout);
+    Request request(fgci_request_);
+    Response response;
 
-    stringstream response_stream;
-
-    string url = curr_request.GetUri();
+    string url = request.GetUri();
 
     RadixUrlTree::RadixAnalyse analyse = url_tree_.FindUrl(url);
 
     if(analyse.found_){
 
+        pair<ControllerAction, Controller*> route = routes_[analyse.code_];
+
+        Controller* controller(route.second);
+
+        ControllerAction action = route.first;
+
+        request.SetParameters(analyse.args_);
+
+        controller->PreDispatch();
+        response = (controller->*action)(request);
+        controller->PostDispatch();
+
+        response.Send(cout);
 
     }
 
 
 
-    response_stream << "<html>\n"
-                    << "  <head>\n"
-                    << "    <title>Hello, World!</title>\n"
-                    << "  </head>\n"
-                    << "  <body>\n"
-                    << "    <h1>Hello World !</h1>\n"
-                    << "  </body>\n"
-                    << "</html>\n";
-
-    curr_response.SetStatusCode(200, "OK");
-    curr_response.SetHeader("Content-Type", "text/html");
-    curr_response.SetContent(response_stream.str());
-
-    curr_response.Send();
 }
+

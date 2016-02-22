@@ -6,8 +6,7 @@ const int RESERVE_URL = 1000;
 RadixUrlTree::RadixUrlTree() {
 
     RadixNode root;
-    root.is_leaf_ = true;
-    root.leaf_id_ = 0;
+    root.is_leaf_ = false;
     structure_.reserve(RESERVE_URL);
     structure_.push_back(root);
     this->root_ = & (structure_[0]);

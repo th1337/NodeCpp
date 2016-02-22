@@ -14,7 +14,7 @@ namespace NodeCpp
     public:
         Request(FCGX_Request &request);
         inline string GetUri(){return uri;}
-        string GetParameter(string parameter_name);
+        string GetParameter(string parameter_name) const;
         inline void SetParameters(map<string, string> parameters){params = parameters;}
         void print_infos(ostream &stream);
 

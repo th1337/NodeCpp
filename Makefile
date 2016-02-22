@@ -10,13 +10,15 @@ all: $(EXEC)
 main: $(OBJ)
 	@$(CC) -o $@ $^ $(LDFLAGS)
 
-main.o: request.h response.h
+main.o: request.h response.h application.h
 
 request.o: request.h
 
 response.o: response.h
 
 radixurltree.o: radixurltree.h
+
+application.o: application.h
 
 %.o: %.cpp
 	@$(CC) -o $@ -c $< $(CFLAGS)

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include "controller.h"
 #include "fcgio.h"
 #include "response.h"
 #include "request.h"
@@ -14,20 +15,22 @@ using namespace std;
 namespace NodeCpp 
 {
 
-    typedef Response (*route_function)(Request);
+
 
     class Application
     {
     public:
+        typedef Response (Controller::*ControllerAction)(const Request&);
+
         Application();
         ~Application();
-        void AddRoute(string url, route_function funct);
+        void AddRoute(string url, ControllerAction funct, Controller* controller);
+        void InitRoutes();
         void Init();
         void Run();
 
     private :
         void ProcessRequest();
-
 
         //Streambuf backups.
         streambuf * cin_streambuf_;
@@ -36,10 +39,14 @@ namespace NodeCpp
 
         //radix tree
         RadixUrlTree url_tree_;
-        vector<route_function> routes;
+        vector<pair<ControllerAction,Controller*>> routes_;
+
+        FCGX_Request fgci_request_;
+
+        Controller hello_controller;
 
 
-        FCGX_Request request_;
+
     };
 }
 
