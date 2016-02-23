@@ -13,10 +13,10 @@ namespace NodeCpp
     {
     public:
         Request(FCGX_Request &request);
-        inline string GetUri(){return uri;}
-        string GetParameter(string parameter_name) const;
-        inline void SetParameters(map<string, string> parameters){params = parameters;}
-        void print_infos(ostream &stream);
+        string GetUri() const { return uri; }
+        string GetParameter(const string& name, const string& default_value) const;
+        void SetParameters(const map<string, string>& parameters) { params = parameters; }
+        void print_infos(ostream& stream) const;
 
     private :
         string method;

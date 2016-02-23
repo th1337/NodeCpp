@@ -44,7 +44,7 @@ void Response::SetContent(const string& content)
     content_ = content;
 }
 
-void Response::Send(ostream& output_stream)
+void Response::Send(ostream& output_stream) const
 {
     output_stream << "Status: " << status_code_ << " " << status_text_ << "\r\n";
     //Headers

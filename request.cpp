@@ -65,20 +65,24 @@ Request::Request(FCGX_Request &request)
     content = get_request_content(request);
 }
 
-void Request::print_infos(ostream &stream)
+void Request::print_infos(ostream &stream) const
 {
     stream << method << " " << remote << ":" << remote_port << " " << uri << ":" << server_port << " content : " << content << endl;
 }
 
-string Request::GetParameter(string parameter_name) const
+string Request::GetParameter(const string& name, const string& default_value) const
 {
-    map<string,string>::const_iterator it = params.find(parameter_name);
+    map<string, string>::const_iterator it_param = params.find(name);
 
-    if(it!=params.end()){
-        return it->second;
+    if(it_param != params.end())
+    {
+        return it_param->second;
     }
-
-    return "";
+    else
+    {
+        return default_value;
+    }
+    
 }
 
 
