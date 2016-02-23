@@ -14,15 +14,10 @@ namespace NodeCpp
     {
     public:
         Controller();
-        ~Controller();
-        void Init();
-        void PreDispatch();
-        void PostDispatch();
-
-        Response HtmlHelloWorld(const Request& request);
-        Response HtmlHelloWorldNominative(const Request& request);
-
-
+        virtual ~Controller();
+        virtual void Init() = 0;
+        virtual void PreDispatch() = 0;
+        virtual void PostDispatch() = 0;
     };
 }
 

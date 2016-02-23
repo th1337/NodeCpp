@@ -4,31 +4,44 @@
 #include <iostream>
 #include <map>
 #include <ostream>
+#include <functional>
 #include "controller.h"
 #include "fcgio.h"
 #include "response.h"
 #include "request.h"
 #include "radixurltree.h"
+
 using namespace std;
-
-
 
 namespace NodeCpp 
 {
-
-
-
     class Application
     {
     public:
-        typedef Response (Controller::*ControllerAction)(const Request&);
-
         Application();
         ~Application();
-        void AddRoute(string url, ControllerAction funct, Controller* controller);
-        void InitRoutes();
         void Init();
         void Run();
+
+    protected:
+        typedef function<Response(const Request&)> ControllerAction;
+
+        struct Route
+        {
+            Controller* controller;
+            ControllerAction action;
+
+            Route(Controller*& c, ControllerAction& a) : controller(c), action(a)
+            {
+
+            }
+        };
+
+        void AddRoute(string url, ControllerAction controller_action, Controller* controller);
+        virtual void InitRoutes() = 0;
+        virtual void InitControllers() = 0;
+
+        ostream console;
 
     private :
         void ProcessRequest();
@@ -38,19 +51,11 @@ namespace NodeCpp
         streambuf * cout_streambuf_;
         streambuf * cerr_streambuf_;
 
-
-        ostream console;
-
         //radix tree
         RadixUrlTree url_tree_;
-        vector<pair<ControllerAction,Controller*>> routes_;
+        vector<Route> routes_;
 
         FCGX_Request fgci_request_;
-
-        Controller hello_controller;
-
-
-
     };
 }
 
