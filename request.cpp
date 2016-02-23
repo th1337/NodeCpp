@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <map>
 #include "request.h"
 
 using namespace std;
@@ -48,6 +49,38 @@ string get_request_content(const FCGX_Request & request)
     return content;
 }
 
+void ExtractQueryParameters(string s, map<string,string> & parameters)
+{
+    std::string delimiter = "&";
+    std::string equal = "=";
+
+    size_t pos = 0;
+    std::string token;
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = s.substr(0, pos);
+        if(token.length()>0){ // we have a parameter assignement (x=y)
+
+            int position_eq = token.find(equal);
+            string var_name = token.substr(0, position_eq);
+            string var_value = token.substr(position_eq+1, token.length());
+
+            parameters[var_name] = var_value;
+        }
+        s.erase(0, pos + delimiter.length());
+    }
+
+    if(s.size()>0){
+        int position_eq = s.find(equal);
+        string var_name = s.substr(0, position_eq);
+        string var_value = s.substr(position_eq+1, s.length());
+
+        parameters[var_name] = var_value;
+    }
+
+}
+
+
+
 Request::Request(FCGX_Request &request)
 {
     const char * uriR = FCGX_GetParam("REQUEST_URI", request.envp);
@@ -55,6 +88,12 @@ Request::Request(FCGX_Request &request)
     const char * remoteR = FCGX_GetParam("REMOTE_ADDR", request.envp);
     const char * remote_portR = FCGX_GetParam("REMOTE_PORT", request.envp);
     const char * server_portR = FCGX_GetParam("SERVER_PORT", request.envp);
+    const char * query_string = FCGX_GetParam("QUERY_STRING", request.envp);
+
+
+    string query(query_string);
+
+    ExtractQueryParameters(query, query_params);
 
     uri.assign(uriR, strlen(uriR));
     method.assign(methodR, strlen(methodR));
@@ -80,6 +119,18 @@ string Request::GetParameter(string parameter_name) const
 
     return "";
 }
+
+string Request::GetQueryParameter(string parameter_name) const
+{
+    map<string,string>::const_iterator it = query_params.find(parameter_name);
+
+    if(it!=query_params.end()){
+        return it->second;
+    }
+
+    return "";
+}
+
 
 
 

@@ -15,6 +15,7 @@ namespace NodeCpp
         Request(FCGX_Request &request);
         inline string GetUri(){return uri;}
         string GetParameter(string parameter_name) const;
+        string GetQueryParameter(string parameter_name) const;
         inline void SetParameters(map<string, string> parameters){params = parameters;}
         void print_infos(ostream &stream);
 
@@ -26,6 +27,7 @@ namespace NodeCpp
         int server_port;
         int remote_port;
         map<string, string> params;
+        map<string, string> query_params;
     };
 }
 
