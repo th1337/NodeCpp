@@ -27,8 +27,8 @@ Route Router::Match(Request& request)
         return route;
 
     }
-    Controller::ControllerAction action(bind(&ErrorController::Error404, error_controller_, std::placeholders::_1));
-    return Route(error_controller_, action);
+
+    return Route(error_controller_, static_cast<Controller::ControllerAction>(&ErrorController::Error404));
 
 }
 
@@ -51,8 +51,10 @@ void Router::ExecuteRoute(const Route& route, const Request& request)
 
 
     Controller * controller = route.GetController();
+    Controller::ControllerAction controller_action = route.GetControllerAction();
+
     controller->PreDispatch();
-    response = route.GetControllerAction()(request);
+    response = (controller->*controller_action)(request);
     controller->PostDispatch();
 
     response.Send(cout);

@@ -9,7 +9,7 @@ namespace NodeCpp
     class ErrorController : public Controller
     {
     public:
-        ErrorController();
+        ErrorController(){}
         ~ErrorController();
         void Init();
         void PreDispatch();

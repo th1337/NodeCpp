@@ -5,11 +5,6 @@
 using namespace std;
 using namespace NodeCpp;
 
-ErrorController::ErrorController()
-{
-
-}
-
 ErrorController::~ErrorController()
 {
 

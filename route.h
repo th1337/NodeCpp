@@ -8,7 +8,7 @@ namespace NodeCpp
     class Route
     {
     public:
-        Route(Controller* c, Controller::ControllerAction& a) : controller(c), action(a){}
+        Route(Controller* c, Controller::ControllerAction a) : controller(c), action(a){}
         Controller* GetController() const {return controller;}
         Controller::ControllerAction GetControllerAction() const {return action;}
     private:

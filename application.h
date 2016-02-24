@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 namespace NodeCpp 
 {
     class Application
@@ -41,11 +42,11 @@ namespace NodeCpp
         streambuf * cout_streambuf_;
         streambuf * cerr_streambuf_;
 
-        //Routes
-        Router router_;
-
         //Error controller
         ErrorController error_controller_;
+
+        //Routes
+        Router router_;
 
         FCGX_Request fgci_request_;
     };

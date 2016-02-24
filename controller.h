@@ -6,6 +6,7 @@
 #include "request.h"
 #include "response.h"
 
+
 using namespace std;
 
 namespace NodeCpp 
@@ -14,14 +15,16 @@ namespace NodeCpp
     {
     public:
 
-        typedef function<Response(const Request&)> ControllerAction;
-        typedef const Request& (*funct)(const Request &);
+        typedef Response(Controller::* ControllerAction)(const Request&);
 
-        Controller();
+        Controller(){}
         virtual ~Controller();
         virtual void Init() = 0;
         virtual void PreDispatch() = 0;
         virtual void PostDispatch() = 0;
+
+    private:
+
     };
 }
 
