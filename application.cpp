@@ -2,12 +2,13 @@
 #include "request.h"
 #include "response.h"
 #include "radixurltree.h"
+
 #include <sstream>
 
 using namespace std;
 using namespace NodeCpp;
 
-Application::Application() : cin_streambuf_(nullptr), cout_streambuf_(nullptr), cerr_streambuf_(nullptr), console(cout.rdbuf())
+Application::Application() : console(cout.rdbuf()), cin_streambuf_(nullptr), cout_streambuf_(nullptr), cerr_streambuf_(nullptr), router_(&error_controller_)
 {
 
 }
@@ -20,21 +21,10 @@ Application::~Application()
     cerr.rdbuf(cerr_streambuf_);
 }
 
-void Application::AddRoute(string url, ControllerAction funct, Controller* controller)
+void Application::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller)
 {
-    //insertion of the route in the tree
-    int code = routes_.size();
-    url_tree_.Insert(url, code);
-    routes_.push_back(make_pair(funct, controller));
-}
 
-
-void Application::InitRoutes()
-{
-   //Here add the routes
-   AddRoute("/", &Controller::HtmlHelloWorld, &hello_controller);
-   AddRoute("hello/{name}/world", &Controller::HtmlHelloWorldNominative, &hello_controller);
-
+    router_.AddRoute(url, controller_action, controller);
 
 }
 
@@ -45,17 +35,17 @@ void Application::Init()
     cout_streambuf_ = cout.rdbuf();
     cerr_streambuf_ = cerr.rdbuf();
 
-    //Controllers init
-    hello_controller.Init();
+
+
+    InitControllers();
+
+    error_controller_.Init();
 
     InitRoutes();
 
     //FastCGI init.
     FCGX_Init();
     FCGX_InitRequest(&fgci_request_, 0, 0);
-
-
-
 }
 
 void Application::Run()
@@ -81,31 +71,17 @@ void Application::ProcessRequest()
 {
 
     Request request(fgci_request_);
-    Response response;
 
-    string url = request.GetUri();
+    Route route = router_.Match(request);
 
-    RadixUrlTree::RadixAnalyse analyse = url_tree_.FindUrl(url);
-
-    if(analyse.found_){
-
-        pair<ControllerAction, Controller*> route = routes_[analyse.code_];
-
-        Controller* controller(route.second);
-
-        ControllerAction action = route.first;
-
-        request.SetParameters(analyse.args_);
-
-        controller->PreDispatch();
-        response = (controller->*action)(request);
-        controller->PostDispatch();
-
-        response.Send(cout);
-
-    }
-
+    router_.ExecuteRoute(route, request);
 
 
 }
 
+void Application::SetErrorController(ErrorController& error_controller)
+{
+    error_controller_ = error_controller;
+    router_.SetErrorController(&error_controller);
+
+}

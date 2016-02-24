@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 #include <iostream>
-
+#include <functional>
 #include "request.h"
 #include "response.h"
 
@@ -13,16 +13,14 @@ namespace NodeCpp
     class Controller
     {
     public:
+
+        typedef function<Response(const Request&)> ControllerAction;
+
         Controller();
-        ~Controller();
-        void Init();
-        void PreDispatch();
-        void PostDispatch();
-
-        Response HtmlHelloWorld(const Request& request);
-        Response HtmlHelloWorldNominative(const Request& request);
-
-
+        virtual ~Controller();
+        virtual void Init() = 0;
+        virtual void PreDispatch() = 0;
+        virtual void PostDispatch() = 0;
     };
 }
 

@@ -15,7 +15,7 @@ namespace NodeCpp
         void SetStatusCode(int status_code, const string& status_text = "");
         void SetHeader(const string& name, const string& value);
         void SetContent(const string& content);
-        void Send(ostream& output_stream);
+        void Send(ostream& output_stream) const;
 
     private :
         int status_code_;
