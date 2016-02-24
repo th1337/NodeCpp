@@ -15,6 +15,8 @@ namespace NodeCpp
         Request(FCGX_Request &request);
 
         string GetUri() const { return uri; }
+        string GetMethod() const { return method; }
+        string GetContent() const { return content; }
         string GetParameter(const string& name, const string& default_value) const;
         string GetQueryParameter(const string& parameter_name, const string& default_value) const;
         void SetParameters(const map<string, string>& parameters) { params = parameters; }
