@@ -15,6 +15,7 @@ namespace NodeCpp
     public:
 
         typedef function<Response(const Request&)> ControllerAction;
+        typedef const Request& (*funct)(const Request &);
 
         Controller();
         virtual ~Controller();
