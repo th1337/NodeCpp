@@ -2,7 +2,7 @@
 #define RADIXURLTREE_H
 
 #include <vector>
-#include <string.h>
+#include <string>
 #include <map>
 
 using namespace std;
