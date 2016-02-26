@@ -8,12 +8,12 @@ namespace NodeCpp
     class Route
     {
     public:
-        Route(Controller* c, Controller::ControllerAction a) : controller(c), action(a){}
-        Controller* GetController() const {return controller;}
-        Controller::ControllerAction GetControllerAction() const {return action;}
+        Route(Controller* controller, Controller::ControllerAction action);
+        Controller* GetController() const {return controller_;}
+        Controller::ControllerAction GetControllerAction() const {return action_;}
     private:
-        Controller* controller;
-        Controller::ControllerAction action;
+        Controller* controller_;
+        Controller::ControllerAction action_;
     };
 }
 #endif // ROUTE_H
