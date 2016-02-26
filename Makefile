@@ -9,7 +9,7 @@ OBJ= $(SRC:.cpp=.o)
 build:
 	@mkdir build
 	make compile
-	$(CC) build/*.o -shared -o build/$(LIB_NAME).so
+	@$(CC) build/*.o -shared -o build/$(LIB_NAME).so
 
 compile: $(OBJ)
 
@@ -30,7 +30,7 @@ controller.o: controller.h request.h response.h
 errorcontroller.o: errorcontroller.h controller.h request.h response.h
 
 %.o: %.cpp
-	$(CC) -o build/$@ -c $< $(CFLAGS)
+	@$(CC) -o build/$@ -c $< $(CFLAGS)
 
 .PHONY: clean
 
