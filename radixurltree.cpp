@@ -21,12 +21,12 @@ RadixUrlTree::~RadixUrlTree() {
 
 
 
-pair<string*,int> SplitUrl(string s) {
+void SplitUrl(string& s, vector<string>& tokens) {
 
 
     std::string delimiter = "/";
 
-    vector<string> tokens;
+    //vector<string> tokens;
 
     size_t pos = 0;
     std::string token;
@@ -43,15 +43,6 @@ pair<string*,int> SplitUrl(string s) {
     }
 
 
-    string* res = new string[tokens.size()];
-
-    for(unsigned int i=0; i<tokens.size(); i++){
-        res[i] = tokens[i];
-    }
-
-
-    return make_pair(res, tokens.size());
-
 }
 
 struct RadixNode;
@@ -66,10 +57,11 @@ string get_param_name(string param) {
 }
 
 
-RadixUrlTree::RadixAnalyse RadixUrlTree::Search(string* url, int size, bool grab_arguments) {
+RadixUrlTree::RadixAnalyse RadixUrlTree::Search(vector<string>& url, bool grab_arguments) {
     RadixNode * curr = root_;
     int index = 0;
     bool found = true;
+    int size = url.size();
     map<string, string> args;
 
     while(found && index<size){
@@ -114,21 +106,21 @@ RadixUrlTree::RadixAnalyse RadixUrlTree::Search(string* url, int size, bool grab
 }
 
 
-void RadixUrlTree::Insert(string URL, int code) {
+void RadixUrlTree::Insert(string url, int code) {
 
-    pair<string*, int> split = SplitUrl(URL);
+    vector<string> split;
 
-    string* url = split.first;
-    int size = split.second;
+    SplitUrl(url, split);
 
-    RadixAnalyse res = Search(url, size, false);
+
+    RadixAnalyse res = Search(split, false);
 
 
     RadixNode* curr = res.node_;
 
 
 
-    for(int i=res.index_; i<size; i++) { //we insert our word
+    for(unsigned int i=res.index_; i<split.size(); i++) { //we insert our word
 
         RadixNode node;
         node.is_leaf_ = false;
@@ -141,9 +133,9 @@ void RadixUrlTree::Insert(string URL, int code) {
 
         RadixEdge* edge_pointer = &(curr->edges_[curr->edges_.size()-1]);
 
-        edge_pointer->label_ = url[i];
+        edge_pointer->label_ = split[i];
 
-        if(url[i].at(0)=='{' && url[i].at(url[i].length()-1)=='}'){//we have a parameter
+        if(split[i].at(0)=='{' && split[i].at(split[i].length()-1)=='}'){//we have a parameter
 
 
             edge_pointer->is_param_ = true;
@@ -165,13 +157,13 @@ void RadixUrlTree::Insert(string URL, int code) {
 
 RadixUrlTree::RadixAnalyse RadixUrlTree::FindUrl(string url) {
 
+    vector<string> split;
 
-    pair<string*, int> split = SplitUrl(url);
+    SplitUrl(url, split);
 
-    RadixAnalyse res = Search(split.first, split.second, true);
+    RadixAnalyse res = Search(split, true);
 
-    delete [] split.first;
-    if(res.index_ ==  split.second && res.node_->is_leaf_){
+    if((unsigned int)res.index_ ==  split.size() && res.node_->is_leaf_){
         res.code_ = res.node_->leaf_id_;
         res.found_ = true;
         return res;

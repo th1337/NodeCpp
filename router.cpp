@@ -14,9 +14,9 @@ Route Router::Match(Request& request)
 
     pos_params = pos_params == string::npos ? url.length() : pos_params;
 
-    ofstream file;
+    string url_wquery(url.substr(0, pos_params));
 
-    RadixUrlTree::RadixAnalyse analyse = url_tree_.FindUrl(url.substr(0, pos_params));
+    RadixUrlTree::RadixAnalyse analyse = url_tree_.FindUrl(url_wquery);
 
     if(analyse.found_)
     {

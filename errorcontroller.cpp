@@ -28,11 +28,11 @@ void ErrorController::PostDispatch()
 Response ErrorController::Error404(const Request& request)
 {
     Response response;
-
+    request.GetUri();
     stringstream response_stream;
     response_stream << "<html>\n"
                     << "  <head>\n"
-                    << "    <title>Not Found</title>\n"
+                    << "    <title>404 - Not Found</title>\n"
                     << "  </head>\n"
                     << "  <body>\n"
                     << "    <h1>404 - Not Found</h1>\n"

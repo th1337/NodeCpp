@@ -25,7 +25,7 @@ public:
 
 
 private:
-    RadixAnalyse Search(string* url, int size, bool grab_arguments);
+    RadixAnalyse Search(vector<string>& url, bool grab_arguments);
 
     class RadixNode;
     class RadixEdge;
