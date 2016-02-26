@@ -9,9 +9,9 @@ OBJ= $(SRC:.cpp=.o)
 build:
 	@mkdir build
 	make compile
-	@g++ build/*.o -shared -o build/$(LIB_NAME).so
+	@$(CC) build/*.o -shared -o build/$(LIB_NAME).so
 
-compile:request.o response.o radixurltree.o application.o controller.o errorcontroller.o route.o router.o
+compile: $(OBJ)
 
 request.o: request.h
 
@@ -19,15 +19,15 @@ response.o: response.h
 
 radixurltree.o: radixurltree.h
 
-application.o: application.h
+application.o: application.h radixurltree.h request.h response.h controller.h errorcontroller.h router.h route.h
 
-route.o: route.h
+route.o: route.h controller.h request.h response.h
 
-router.o: router.h
+router.o: router.h route.h controller.h request.h response.h response.h radixurltree.h errorcontroller.h
 
-controller.o: controller.h
+controller.o: controller.h request.h response.h
 
-errorcontroller.o: errorcontroller.h
+errorcontroller.o: errorcontroller.h controller.h request.h response.h
 
 %.o: %.cpp
 	@$(CC) -o build/$@ -c -fPIC $< $(CFLAGS)
