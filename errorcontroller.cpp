@@ -39,7 +39,7 @@ Response ErrorController::Error404(const Request& request)
                     << "  </body>\n"
                     << "</html>\n";
 
-    response.SetStatusCode(404, "NOT_FOUND");
+    response.SetStatusCode(404, "Not Found");
     response.SetHeader("Content-Type", "text/html");
     response.SetContent(response_stream.str());
 
