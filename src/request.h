@@ -12,7 +12,7 @@ namespace NodeCpp
     class Request
     {
     public:
-        Request(FCGX_Request &request);
+        Request(const FCGX_Request& request);
         Request(){}
 
         string GetUri() const { return uri; }
