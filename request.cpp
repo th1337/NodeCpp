@@ -81,7 +81,7 @@ void ExtractQueryParameters(string s, map<string,string> & parameters)
 
 
 
-Request::Request(FCGX_Request &request)
+Request::Request(const FCGX_Request& request)
 {
     const char * uriR = FCGX_GetParam("REQUEST_URI", request.envp);
     const char * methodR = FCGX_GetParam("REQUEST_METHOD", request.envp);
