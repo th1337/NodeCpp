@@ -4,7 +4,7 @@ project(NodeCpp)
 
 set(LIBRARY_OUTPUT_PATH build)
 
-#Génération de la liste des fichiers sources
+#Source files list generation.
 
 file(
 
@@ -18,7 +18,7 @@ file(
 
 
 
-#Déclaration de l'exécutable
+#Executable declaration
 
 add_library(
 
