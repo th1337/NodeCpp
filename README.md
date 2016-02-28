@@ -6,7 +6,7 @@ NodeCpp uses C++ and FastCGI to serve a REST API almost as fast as the light.
 Installation
 ------------
 
-### Requirements
+### Requirements
 
 	$ apt-get install libfcgi-dev
 	$ apt-get install spawn-fcgi
@@ -14,6 +14,7 @@ Installation
 	$ apt-get install cmake
 
 ### Compile NodeCpp
+NodeCpp includes Cmake support.
 
 	$ cmake . -G “Unix Makefiles”
 	$ make
@@ -21,71 +22,16 @@ Installation
 The compilation outputs a static lib named libnodecpp.a, located in NodeCpp/build.
 
 
-### Configure Nginx
+### Configure Nginx
 
 You can put the following configuration in the nginx.conf file.
 	user www-data;
 	worker_processes 4;
 	pid /run/nginx.pid;
 
-	events {
-	    worker_connections 768;
-	    # multi_accept on;
-	}
+The most important part of the nginx.conf file is the server part. See the example below :
 
-	http {
 
-	    ##
-	    # Basic Settings
-	    ##
-
-	    sendfile on;
-	    tcp_nopush on;
-	    tcp_nodelay on;
-	    keepalive_timeout 65;
-	    types_hash_max_size 2048;
-	    # server_tokens off;
-
-	    # server_names_hash_bucket_size 64;
-	    # server_name_in_redirect off;
-
-	    include /etc/nginx/mime.types;
-	    default_type application/octet-stream;
-
-	    ##
-	    # SSL Settings
-	    ##
-
-	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
-	    ssl_prefer_server_ciphers on;
-
-	    ##
-	    # Logging Settings
-	    ##
-
-	    access_log /var/log/nginx/access.log;
-	    error_log /var/log/nginx/error.log;
-
-	    ##
-	    # Gzip Settings
-	    ##
-
-	    gzip on;
-	    gzip_disable "msie6";
-
-	    # gzip_vary on;
-	    # gzip_proxied any;
-	    # gzip_comp_level 6;
-	    # gzip_buffers 16 8k;
-	    # gzip_http_version 1.1;
-	    # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-
-	    ##
-	    # Virtual Host Configs
-	    ##
-
-	    #include /etc/nginx/conf.d/*.conf;
-	    #include /etc/nginx/sites-enabled/*;
 	    server {
 	        listen 80;
 	        server_name localhost;
@@ -110,9 +56,9 @@ You can put the following configuration in the nginx.conf file.
 	          fastcgi_param  SERVER_ADDR        $server_addr;
 	          fastcgi_param  SERVER_PORT        $server_port;
 	          fastcgi_param  SERVER_NAME        $server_name;
+		    }
 	    }
-	    }
-	}
+	
 
 
 
@@ -122,3 +68,113 @@ You can put the following configuration in the nginx.conf file.
 	sudo nginx -c <path to nginx.conf>
 	# spawn the fcgi app on port 8000 with no fork
 	spawn-fcgi -p 8000 -n hello_world
+	
+A complete running application is available in NodeCpp/samples. Just use Cmake to compile it.
+
+### Application
+
+Then, you are ready to getting started with writing your NodeCpp application.
+You should create an application class, inheriting from NodeCpp::Application :
+
+	#include "NodeCpp/Application.h"
+	using namespace NodeCpp;
+
+	class HelloApplication : public Application
+	{
+	public:
+	    HelloApplication();
+	    ~HelloApplication();
+	
+	protected:
+	    void InitRoutes();
+	    void InitControllers();
+	
+	};
+
+Your application is the basis of your API. You should declare your Controllers and your Routes in it.
+
+### Controllers
+
+The Controllers are the core of your REST Api. They contain the methods which will be called to process the incoming requests. Just extend from NodeCpp::Controller, and declare them in your application :
+
+	#include "NodeCpp/controller.h"
+
+	using namespace NodeCpp;
+	
+	class HelloController : public Controller
+	{
+	public:
+	    HelloController(){}
+	    ~HelloController();
+	    void Init();
+	    void PreDispatch();
+	    void PostDispatch();
+	
+	    Response HtmlHelloWorld(const Request& request);
+	    
+	};
+The method HtmlHelloWorld will contain the code to process the incoming request.
+Declare the controller in your application :
+
+	class HelloApplication : public Application
+	{
+	 ...
+	private :
+	    HelloController hello_controller;
+	
+	};
+If you have any particular initialization to do for your controller, just put it in HelloController::Init(). And call HelloController::Init() in HelloApplication::Init().
+
+### Routes
+
+The routes are the way to tell NodeCpp the link between an URL and a method in a controller.
+They should be specified in NodeCpp::InitRoute() :
+
+	void HelloApplication::InitRoutes()
+	{
+	   //Here, add the routes
+	   AddRoute("/hello/world", static_cast<Controller::ControllerAction>(&HelloController::HtmlHelloWorld), &hello_controller);
+	
+	}
+We specify here that a request with the URL "/hello/world" will be processed by the method HelloController::HtmlHelloWorld.
+In HelloController, just process the request :
+
+	Response HelloController::HtmlHelloWorld(const Request& request)
+	{
+		    Response response;
+	
+	    stringstream response_stream;
+	    response_stream << "<html>\n"
+	                    << "  <head>\n"
+	                    << "    <title>Hello, World!</title>\n"
+	                    << "  </head>\n"
+	                    << "  <body>\n"
+	                    << "    <h1>Hello World, welcome page</h1>\n"
+	                    << "  </body>\n"
+	                    << "</html>\n";
+	
+	    response.SetStatusCode(200, "OK");
+	    response.SetHeader("Content-Type", "text/html");
+	    response.SetContent(response_stream.str());
+	
+	    return response;
+	}
+
+### Supported URL 
+
+
+NodeCpp allows you to use standard URLs, with parameters :
+For example, you can declare URLs in addRoutes() such as "/hello/{name}/world", where "name" is the name of a parameter in the URL.
+You can find back the value in the Request object passed to your controller :
+
+	Response HelloController::HtmlHelloWorld(const Request& request)
+	{
+		request.GetParameter("name", "default value");
+	}
+For the query parameters "/hello/world?id=123", you can find back the value of "id" :
+
+		request.getQueryParameter("id", "default value");
+
+### Tests
+
+You can run NodeCpp tests :  they are located in "tests" directory. The tests are run under the googletest framework. A makefile is provided, just call make and then execute test program.
