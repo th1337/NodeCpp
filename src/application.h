@@ -12,8 +12,9 @@
 #include "radixurltree.h"
 #include "router.h"
 
-using namespace std;
+#define NODECPP_ACTION(controller_action) static_cast<Controller::ControllerAction>(controller_action)
 
+using namespace std;
 
 namespace NodeCpp 
 {
