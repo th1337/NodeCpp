@@ -133,7 +133,7 @@ They should be specified in NodeCpp::InitRoute() :
 	void HelloApplication::InitRoutes()
 	{
 	   //Here, add the routes
-	   AddRoute("/hello/world", static_cast<Controller::ControllerAction>(&HelloController::HtmlHelloWorld), &hello_controller);
+	   AddRoute("/hello/world", NODECPP_ACTION(&HelloController::HtmlHelloWorld), &hello_controller);
 	
 	}
 We specify here that a request with the URL "/hello/world" will be processed by the method HelloController::HtmlHelloWorld.
