@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 #include <ostream>
 #include "controller.h"
 #include "errorcontroller.h"
@@ -28,14 +29,16 @@ namespace NodeCpp
     protected:
 
         void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller);
+        void AddController(Controller* controller);
         void SetErrorController(ErrorController& error_controller);
         virtual void InitRoutes() = 0;
-        virtual void InitControllers() = 0;
+
 
         ostream console;
 
     private :
         void ProcessRequest();
+        void InitControllers();
 
         //Streambuf backups.
         streambuf * cin_streambuf_;
@@ -44,6 +47,8 @@ namespace NodeCpp
 
         //Error controller
         ErrorController error_controller_;
+
+        vector<Controller*> controllers_;
 
         //Routes
         Router router_;

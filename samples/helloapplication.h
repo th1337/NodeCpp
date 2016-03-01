@@ -15,7 +15,6 @@ public:
 
 protected:
     void InitRoutes();
-    void InitControllers();
 
 private :
     HelloController hello_controller;

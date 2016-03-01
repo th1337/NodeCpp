@@ -23,10 +23,20 @@ Application::~Application()
 
 void Application::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller)
 {
-
     router_.AddRoute(url, controller_action, controller);
+}
 
+void Application::AddController(Controller *controller)
+{
 
+}
+
+void Application::InitControllers()
+{
+    error_controller_.Init();
+    for(unsigned int i=0; i<controllers_.size(); i++){
+        controllers_[i]->Init();
+    }
 }
 
 void Application::Init()
@@ -36,12 +46,7 @@ void Application::Init()
     cout_streambuf_ = cout.rdbuf();
     cerr_streambuf_ = cerr.rdbuf();
 
-
-
     InitControllers();
-
-    error_controller_.Init();
-
     InitRoutes();
 
     //FastCGI init.

@@ -4,7 +4,8 @@ using namespace std;
 
 HelloApplication::HelloApplication()
 {
-
+    AddController(&hello_controller);
+    AddController(&sort_controller);
 }
 
 HelloApplication::~HelloApplication()
@@ -20,8 +21,3 @@ void HelloApplication::InitRoutes()
    AddRoute("/sort", static_cast<Controller::ControllerAction>(&SortController::Sort), &sort_controller);
 }
 
-void HelloApplication::InitControllers()
-{
-    hello_controller.Init();
-    sort_controller.Init();
-}
