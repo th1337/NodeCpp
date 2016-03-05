@@ -21,20 +21,20 @@ Application::~Application()
     cerr.rdbuf(cerr_streambuf_);
 }
 
-void Application::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller)
+void Application::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Firewall* firewall)
 {
-    router_.AddRoute(url, controller_action, controller);
+    router_.AddRoute(url, controller_action, controller, firewall);
 }
 
 void Application::AddController(Controller *controller)
 {
-
+    controllers_.push_back(controller);
 }
 
 void Application::InitControllers()
 {
     error_controller_.Init();
-    for(unsigned int i=0; i<controllers_.size(); i++){
+    for(unsigned int i = 0;i < controllers_.size();i++) {
         controllers_[i]->Init();
     }
 }
@@ -75,19 +75,15 @@ void Application::Run()
 
 void Application::ProcessRequest()
 {
-
     Request request(fgci_request_);
 
     Route route = router_.Match(request);
 
     router_.ExecuteRoute(route, request);
-
-
 }
 
 void Application::SetErrorController(ErrorController& error_controller)
 {
     error_controller_ = error_controller;
     router_.SetErrorController(&error_controller);
-
 }

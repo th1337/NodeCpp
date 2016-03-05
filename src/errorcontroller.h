@@ -15,10 +15,8 @@ namespace NodeCpp
         void PreDispatch();
         void PostDispatch();
 
-        Response Error404(const Request& request);
-
-
-
+        virtual Response Error403(const Request& request);
+        virtual Response Error404(const Request& request);
     };
 }
 

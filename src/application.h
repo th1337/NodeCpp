@@ -12,8 +12,7 @@
 #include "request.h"
 #include "radixurltree.h"
 #include "router.h"
-
-#define NODECPP_ACTION(controller_action) static_cast<Controller::ControllerAction>(controller_action)
+#include "firewall.h"
 
 using namespace std;
 
@@ -28,12 +27,10 @@ namespace NodeCpp
         void Run();
 
     protected:
-
-        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller);
+        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Firewall* firewall = nullptr);
         void AddController(Controller* controller);
         void SetErrorController(ErrorController& error_controller);
         virtual void InitRoutes() = 0;
-
 
         ostream console;
 

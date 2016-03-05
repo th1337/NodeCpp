@@ -25,6 +25,27 @@ void ErrorController::PostDispatch()
 
 }
 
+Response ErrorController::Error403(const Request& request)
+{
+    Response response;
+    request.GetUri();
+    stringstream response_stream;
+    response_stream << "<html>\n"
+                    << "  <head>\n"
+                    << "    <title>403 - Forbidden</title>\n"
+                    << "  </head>\n"
+                    << "  <body>\n"
+                    << "    <h1>403 - Forbidden</h1>\n"
+                    << "  </body>\n"
+                    << "</html>\n";
+
+    response.SetStatusCode(403);
+    response.SetHeader("Content-Type", "text/html");
+    response.SetContent(response_stream.str());
+
+    return response;
+}
+
 Response ErrorController::Error404(const Request& request)
 {
     Response response;
@@ -39,7 +60,7 @@ Response ErrorController::Error404(const Request& request)
                     << "  </body>\n"
                     << "</html>\n";
 
-    response.SetStatusCode(404, "Not Found");
+    response.SetStatusCode(404);
     response.SetHeader("Content-Type", "text/html");
     response.SetContent(response_stream.str());
 
