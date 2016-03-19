@@ -145,7 +145,12 @@ void Response::SetStatusCode(int status_code, const string& status_text)
     else
     {
         //If the status_text is empty, it will be automatically populated for the known status code.
-        status_text_ = "Default status text";
+        map<int, string>::const_iterator itCode = HTTP_STATUS_TEXTS.find(status_code);
+        if (itCode != HTTP_STATUS_TEXTS.end()) {
+            status_text_ = itCode->second;
+        } else {
+            status_text_ = "Unknown status code";
+        }
     }
 }
 

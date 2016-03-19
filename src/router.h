@@ -17,8 +17,8 @@ namespace NodeCpp
     public:
         Router(ErrorController* error_controller):error_controller_(error_controller){}
         Route Match(Request& request);
-        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller);
-        void SetErrorController(ErrorController* error_controller){error_controller_ = error_controller;}
+        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Firewall* firewall = nullptr);
+        void SetErrorController(ErrorController* error_controller) {error_controller_ = error_controller;}
         void ExecuteRoute(const Route& route, const Request& request);
 
     private:
