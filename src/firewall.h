@@ -2,7 +2,6 @@
 #define FIREWALL_H
 
 #include "request.h"
-
 using namespace std;
 
 namespace NodeCpp 
