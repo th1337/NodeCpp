@@ -5,14 +5,19 @@
 
 using namespace std;
 
+namespace NodeCpp
+{
+
 class TokenGenerator
 {
 public:
     TokenGenerator(int seed);
-    string GenerateToken(int id);
+    string GenerateToken(int id) const;
 
 private:
-    int seed; //the seed of the generator
+    int seed_; //the seed of the generator
 };
+
+}
 
 #endif // TOKENGENERATOR_H

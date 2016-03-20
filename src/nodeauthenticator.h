@@ -6,27 +6,48 @@
 
 namespace NodeCpp
 {
+    
 class NodeAuthenticator
 {
 public:
-
-    const string LOGIN = "login";
-    const string PASSWORD = "password";
-    const string TOKEN  = "token";
+    
+    //Names of the request parameters.
+    static const string LOGIN_PARAM;
+    static const string PASSWORD_PARAM;
+    static const string TOKEN_PARAM;
 
     NodeAuthenticator(TokenGenerator* generator);
-
-    virtual int Handle(Request& request);
+    virtual int Handle(const Request& request);
+    
+    /**
+     * Log the user in the NodeAuthenticator.
+     * Return an authentication token for the user.
+     */
+    virtual string LogIn(const string& login, const string& password);
 
 protected :
-
-    virtual int AuthenticateUser(string login, string password) = 0;
-    virtual int AuthenticateToken(string token) = 0;
-    virtual int StoreToken(string token, int id) = 0;
-    virtual string GenerateToken(int id);
+    
+    /**
+     * Authenticate a user with a token.
+     * Return the user id.
+     */
+    virtual int AuthenticateToken(const string& token) = 0;
+    
+    /**
+     * Authenticate a user with a login/password couple.
+     * Return the user id.
+     */
+    virtual int AuthenticateUser(const string& login, const string& password) = 0;
+    
+    /**
+     * Store an authentication token for a user.
+     * This method is called when the user is logged in, to store his token.
+     */
+    virtual int StoreToken(const string& token, int id) = 0;
 
 private :
-    TokenGenerator* tokenGenerator;
+    TokenGenerator* tokenGenerator_;
 };
+
 }
 #endif // NODEAUTHENTICATOR_H
