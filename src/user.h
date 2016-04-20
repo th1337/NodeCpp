@@ -12,13 +12,13 @@ public:
     /**
      * Test whether two users are the same.
      */
-    virtual bool Equals(const User& otherUser) = 0;
+    virtual bool Equals(const User& otherUser) const = 0;
     
     /**
      * Return true if the User is anonymous, false otherwise.
      * @return True if the User is anonymous, false otherwise.
      */
-    bool IsAnonymous() { return anonymous_; };
+    bool IsAnonymous() const { return anonymous_; };
     
 protected:
     /**

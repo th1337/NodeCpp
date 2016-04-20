@@ -1,4 +1,5 @@
 #include "nodeauthenticator.h"
+#include "anonymoususer.h"
 
 using namespace std;
 using namespace NodeCpp;
@@ -12,15 +13,15 @@ NodeAuthenticator::NodeAuthenticator(TokenGenerator* generator):tokenGenerator_(
 
 }
 
-User* NodeAuthenticator::HandleUser(const Request &request){
+User* NodeAuthenticator::HandleUser(const Request &request) {
     string token = request.GetQueryParameter(TOKEN_PARAM, "");
     
     if(!token.empty()) {
         //There is a token in the request.
         return AuthenticateToken(token);
     }
-    ///TODO: Return an anonymous User.
-    return nullptr;
+    //Return an anonymous User.
+    return new AnonymousUser();
 }
 
 string NodeAuthenticator::LogIn(const string& login, const string& password) {
