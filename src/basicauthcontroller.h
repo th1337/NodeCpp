@@ -1,16 +1,16 @@
-#ifndef ERRORCONTROLLER_H
-#define ERRORCONTROLLER_H
+#ifndef BASICAUTHCONTROLLER_H
+#define BASICAUTHCONTROLLER_H
 
 #include "controller.h"
 
 
 namespace NodeCpp
 {
-    class ErrorController : public Controller
+    class BasicAuthController : public Controller
     {
     public:
-        ErrorController(){}
-        ~ErrorController();
+        BasicAuthController(){}
+        ~BasicAuthController();
         void Init();
         void PreDispatch();
         void PostDispatch();
@@ -21,4 +21,4 @@ namespace NodeCpp
     };
 }
 
-#endif // ERRORCONTROLLER_H
+#endif // BASICAUTHCONTROLLER_H

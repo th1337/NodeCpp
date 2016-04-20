@@ -1,14 +1,15 @@
 #include "tokengenerator.h"
 
-TokenGenerator::TokenGenerator(int seed) : seed(seed)
+using namespace NodeCpp;
+
+TokenGenerator::TokenGenerator(int seed) : seed_(seed)
 {
 
 }
 
 
-string TokenGenerator::GenerateToken(int id)
+string TokenGenerator::GenerateToken(const User* user) const
 {
-
     return "token";
 }
 

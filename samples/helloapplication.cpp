@@ -6,6 +6,7 @@ HelloApplication::HelloApplication()
 {
     AddController(&hello_controller);
     AddController(&sort_controller);
+    AddController(&basic_controller);
 }
 
 HelloApplication::~HelloApplication()
@@ -19,5 +20,6 @@ void HelloApplication::InitRoutes()
    AddRoute("/", NODECPP_ACTION(&HelloController::HtmlHelloWorld), &hello_controller);
    AddRoute("hello/{name}/world", NODECPP_ACTION(&HelloController::HtmlHelloWorldNominative), &hello_controller);
    AddRoute("/sort", NODECPP_ACTION(&SortController::Sort), &sort_controller);
+   AddRoute("/private", NODECPP_ACTION(&HelloBasicAuthController::HtmlHelloWorldProtected), &basic_controller, &basic_authenticator);
 }
 

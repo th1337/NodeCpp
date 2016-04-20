@@ -23,6 +23,9 @@ namespace NodeCpp
         virtual void Init() = 0;
         virtual void PreDispatch() = 0;
         virtual void PostDispatch() = 0;
+        virtual Response Error401(const Request& request);
+        virtual Response Error403(const Request& request);
+        virtual Response Error404(const Request& request);
 
     private:
 

@@ -21,9 +21,9 @@ Application::~Application()
     cerr.rdbuf(cerr_streambuf_);
 }
 
-void Application::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Firewall* firewall)
+void Application::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Authenticator* authenticator, Authorizator* authorizator, Firewall* firewall)
 {
-    router_.AddRoute(url, controller_action, controller, firewall);
+    router_.AddRoute(url, controller_action, controller, authenticator, authorizator, firewall);
 }
 
 void Application::AddController(Controller *controller)

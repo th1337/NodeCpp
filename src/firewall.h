@@ -9,7 +9,7 @@ namespace NodeCpp
     class Firewall
     {
     public:
-        Firewall();
+        Firewall() {}
         virtual bool Accept(const Request& request) = 0;
     };
 }
