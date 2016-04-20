@@ -89,17 +89,18 @@ Request::Request(const FCGX_Request& request)
     const char * remote_portR = FCGX_GetParam("REMOTE_PORT", request.envp);
     const char * server_portR = FCGX_GetParam("SERVER_PORT", request.envp);
     const char * query_string = FCGX_GetParam("QUERY_STRING", request.envp);
-
+    const char * auth_typeR = FCGX_GetParam("AUTH_TYPE", request.envp);
 
     string query(query_string);
 
     ExtractQueryParameters(query, query_params);
 
-    uri.assign(uriR, strlen(uriR));
-    method.assign(methodR, strlen(methodR));
-    remote.assign(remoteR, strlen(remoteR));
-    remote_port = atoi(remote_portR);
-    server_port = atoi(server_portR);
+    uri_.assign(uriR, strlen(uriR));
+    method_.assign(methodR, strlen(methodR));
+    remote_.assign(remoteR, strlen(remoteR));
+    auth_type_.assign(auth_typeR, strlen(auth_typeR));
+    remote_port_ = atoi(remote_portR);
+    server_port_ = atoi(server_portR);
 
     content = get_request_content(request);
 }

@@ -32,15 +32,16 @@ Response HelloController::HtmlHelloWorld(const Request& request)
     stringstream response_stream;
     response_stream << "<html>\n"
                     << "  <head>\n"
-                    << "    <title>Hello, World!</title>\n"
+                    << "    <title>"<<"Hello, World!"<<"/title>\n"
                     << "  </head>\n"
                     << "  <body>\n"
                     << "    <h1>Hello World, welcome page</h1>\n"
                     << "  </body>\n"
                     << "</html>\n";
 
-    response.SetStatusCode(200, "OK");
+    response.SetStatusCode(401, "Unauthorized status");
     response.SetHeader("Content-Type", "text/html");
+    response.SetHeader("WWW-Authenticate", "Basic realm=\"WallyWorld\"");
     response.SetContent(response_stream.str());
 
     return response;
