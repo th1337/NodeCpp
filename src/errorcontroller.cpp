@@ -25,6 +25,27 @@ void ErrorController::PostDispatch()
 
 }
 
+Response ErrorController::Error401(const Request& request)
+{
+    Response response;
+    request.GetUri();
+    stringstream response_stream;
+    response_stream << "<html>\n"
+                    << "  <head>\n"
+                    << "    <title>401 - Unauthorized</title>\n"
+                    << "  </head>\n"
+                    << "  <body>\n"
+                    << "    <h1>401 - Unauthorized</h1>\n"
+                    << "  </body>\n"
+                    << "</html>\n";
+
+    response.SetStatusCode(401);
+    response.SetHeader("Content-Type", "text/html");
+    response.SetContent(response_stream.str());
+
+    return response;
+}
+
 Response ErrorController::Error403(const Request& request)
 {
     Response response;

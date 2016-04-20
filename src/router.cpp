@@ -35,6 +35,20 @@ Route Router::Match(Request& request)
             route.GetAuthenticator()->Handle(request);
         }
         
+        //Authorize the user.
+        if (route.GetAuthorizator() != nullptr && !route.GetAuthorizator()->Accept(request))
+        {
+            if (request.GetUser()->IsAnonymous())
+            {
+                //The User is not authenticated.
+                return Route(error_controller_, NODECPP_ACTION(&ErrorController::Error401));
+            }
+            else
+            {
+                //This route is forbidden for the User.
+                return Route(error_controller_, NODECPP_ACTION(&ErrorController::Error403));
+            }
+        }
         
         //The Firewall accepts the request, or no firewall is defined for this route.
         return route;
@@ -44,13 +58,13 @@ Route Router::Match(Request& request)
 }
 
 
-void Router::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Authenticator* authenticator, Firewall* firewall)
+void Router::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Authenticator* authenticator, Authorizator* authorizator, Firewall* firewall)
 {
     //Insertion of the route in the tree.
     int code = routes_.size();
 
     url_tree_.Insert(url, code);
-    routes_.push_back(Route(controller, controller_action, authenticator, firewall));
+    routes_.push_back(Route(controller, controller_action, authenticator, authorizator, firewall));
 }
 
 

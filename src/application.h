@@ -13,6 +13,7 @@
 #include "radixurltree.h"
 #include "router.h"
 #include "firewall.h"
+#include "authorizator.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ namespace NodeCpp
         void Run();
 
     protected:
-        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Authenticator* authenticator = nullptr, Firewall* firewall = nullptr);
+        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Authenticator* authenticator = nullptr, Authorizator* authorizator = nullptr, Firewall* firewall = nullptr);
         void AddController(Controller* controller);
         void SetErrorController(ErrorController& error_controller);
         virtual void InitRoutes() = 0;
