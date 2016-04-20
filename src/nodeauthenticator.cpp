@@ -3,9 +3,9 @@
 using namespace std;
 using namespace NodeCpp;
 
-const string LOGIN_PARAM = "login";
-const string PASSWORD_PARAM = "password";
-const string TOKEN_PARAM = "token";
+const string NodeAuthenticator::LOGIN_PARAM = "login";
+const string NodeAuthenticator::PASSWORD_PARAM = "password";
+const string NodeAuthenticator::TOKEN_PARAM = "token";
 
 NodeAuthenticator::NodeAuthenticator(TokenGenerator* generator):tokenGenerator_(generator)
 {

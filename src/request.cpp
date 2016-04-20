@@ -79,9 +79,12 @@ void ExtractQueryParameters(string s, map<string,string> & parameters)
 
 }
 
+Request::Request() : user_(nullptr)
+{
+    
+}
 
-
-Request::Request(const FCGX_Request& request)
+Request::Request(const FCGX_Request& request) : Request()
 {
     const char * uriR = FCGX_GetParam("REQUEST_URI", request.envp);
     const char * methodR = FCGX_GetParam("REQUEST_METHOD", request.envp);
@@ -104,7 +107,12 @@ Request::Request(const FCGX_Request& request)
     content = get_request_content(request);
 }
 
-void Request::print_infos(ostream &stream) const
+Request::~Request()
+{
+    delete user_;
+}
+
+void Request::PrintInfos(ostream &stream) const
 {
     stream << method << " " << remote << ":" << remote_port << " " << uri << ":" << server_port << " content : " << content << endl;
 }
@@ -138,13 +146,7 @@ string Request::GetQueryParameter(const string& parameter_name, const string& de
 
 }
 
-
-
-
-
-
-
-
-
-
-
+void Request::SetUser(User* user)
+{
+    user_ = user;
+}

@@ -27,7 +27,7 @@ namespace NodeCpp
         void Run();
 
     protected:
-        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Firewall* firewall = nullptr);
+        void AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Authenticator* authenticator = nullptr, Firewall* firewall = nullptr);
         void AddController(Controller* controller);
         void SetErrorController(ErrorController& error_controller);
         virtual void InitRoutes() = 0;

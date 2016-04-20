@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include "fcgio.h"
+#include "user.h"
 
 using namespace std;
 
@@ -12,8 +13,9 @@ namespace NodeCpp
     class Request
     {
     public:
+        Request();
         Request(const FCGX_Request& request);
-        Request(){}
+        ~Request();
 
         string GetUri() const { return uri; }
         string GetMethod() const { return method; }
@@ -21,8 +23,8 @@ namespace NodeCpp
         string GetParameter(const string& name, const string& default_value) const;
         string GetQueryParameter(const string& parameter_name, const string& default_value) const;
         void SetParameters(const map<string, string>& parameters) { params = parameters; }
-        void print_infos(ostream& stream) const;
-
+        void PrintInfos(ostream& stream) const;
+        void SetUser(User* user);
 
     private :
         string method;
@@ -33,6 +35,7 @@ namespace NodeCpp
         int remote_port;
         map<string, string> params;
         map<string, string> query_params;
+        User* user_;
     };
 }
 

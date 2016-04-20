@@ -2,7 +2,11 @@
 
 using namespace NodeCpp;
 
-Route::Route(Controller* controller, Controller::ControllerAction action, Firewall* firewall) : controller_(controller), action_(action), firewall_(firewall)
+Route::Route(Controller* controller, Controller::ControllerAction action, Authenticator* authenticator, Firewall* firewall) :
+    controller_(controller),
+    action_(action),
+    authenticator_(authenticator),
+    firewall_(firewall)
 {
 
 }

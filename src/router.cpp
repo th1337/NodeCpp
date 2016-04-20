@@ -28,6 +28,14 @@ Route Router::Match(Request& request)
         {
             return Route(error_controller_, NODECPP_ACTION(&ErrorController::Error403));
         }
+        
+        //Authentication of the user.
+        if (route.GetAuthenticator() != nullptr)
+        {
+            route.GetAuthenticator()->Handle(request);
+        }
+        
+        
         //The Firewall accepts the request, or no firewall is defined for this route.
         return route;
     }
@@ -36,13 +44,13 @@ Route Router::Match(Request& request)
 }
 
 
-void Router::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Firewall* firewall)
+void Router::AddRoute(string url, Controller::ControllerAction controller_action, Controller* controller, Authenticator* authenticator, Firewall* firewall)
 {
     //Insertion of the route in the tree.
     int code = routes_.size();
 
     url_tree_.Insert(url, code);
-    routes_.push_back(Route(controller, controller_action, firewall));
+    routes_.push_back(Route(controller, controller_action, authenticator, firewall));
 }
 
 
