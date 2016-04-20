@@ -24,7 +24,7 @@ public:
      * The User has to be dynamically allocated in this method.
      * @return The User.
      */
-    virtual User* AuthenticateUser(const Request& request) = 0;
+    virtual User* HandleUser(const Request& request) = 0;
 };
 
 }

@@ -8,7 +8,7 @@ TokenGenerator::TokenGenerator(int seed) : seed_(seed)
 }
 
 
-string TokenGenerator::GenerateToken(int id) const
+string TokenGenerator::GenerateToken(const User* user) const
 {
     return "token";
 }

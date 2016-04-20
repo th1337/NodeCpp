@@ -2,6 +2,7 @@
 #define TOKENGENERATOR_H
 
 #include <string>
+#include "user.h"
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class TokenGenerator
 {
 public:
     TokenGenerator(int seed);
-    string GenerateToken(int id) const;
+    string GenerateToken(const User* user) const;
 
 private:
     int seed_; //the seed of the generator

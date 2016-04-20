@@ -9,5 +9,5 @@ Authenticator::Authenticator()
 
 void Authenticator::Handle(Request& request)
 {
-    request.SetUser(AuthenticateUser(request));
+    request.SetUser(HandleUser(request));
 }
