@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <map>
+#include <algorithm>
 #include "request.h"
 
 using namespace std;
@@ -49,6 +50,34 @@ string get_request_content(const FCGX_Request & request)
     return content;
 }
 
+void ExtractRequestHeaders(char** env, map<string, string> & headers)
+{
+
+    string user_prefix = "HTTP_";
+
+    while (*(++env)){ //iterate through the env variables
+
+        string header(*env);
+
+        if(header.length() > user_prefix.length()){
+
+            string prefix(header.substr(0, user_prefix.length()));
+
+            if(prefix.compare(user_prefix) == 0){ //we have a user header
+
+                string header_cleaned(header.substr(user_prefix.length(), header.length()));
+
+                int index_equal = header_cleaned.find('=');
+
+                string header_value(header_cleaned.substr(index_equal+1, header_cleaned.length()));
+                string header_name(header_cleaned.substr(0, index_equal));
+
+                headers[header_name] = header_value;
+            }
+        }
+    }
+}
+
 Request::Request() : user_(nullptr)
 {
     
@@ -63,18 +92,20 @@ Request::Request(const FCGX_Request& request) : Request()
     const char * server_portR = FCGX_GetParam("SERVER_PORT", request.envp);
     const char * query_string = FCGX_GetParam("QUERY_STRING", request.envp);
 
-
     string query(query_string);
 
-    ExtractQueryParameters(query, query_params);
+    ExtractQueryParameters(query, query_params_);
+    ExtractRequestHeaders(request.envp, headers_);
 
-    uri.assign(uriR, strlen(uriR));
-    method.assign(methodR, strlen(methodR));
-    remote.assign(remoteR, strlen(remoteR));
-    remote_port = atoi(remote_portR);
-    server_port = atoi(server_portR);
+    uri_.assign(uriR, strlen(uriR));
+    method_.assign(methodR, strlen(methodR));
+    remote_.assign(remoteR, strlen(remoteR));
+    remote_port_ = atoi(remote_portR);
+    server_port_ = atoi(server_portR);
 
-    content = get_request_content(request);
+    content_ = get_request_content(request);
+
+
 }
 
 Request::~Request()
@@ -84,14 +115,15 @@ Request::~Request()
 
 void Request::PrintInfos(ostream &stream) const
 {
-    stream << method << " " << remote << ":" << remote_port << " " << uri << ":" << server_port << " content : " << content << endl;
+    stream << method_ << " " << remote_ << ":" << remote_port_ << " " << uri_ << ":" << server_port_ <<" auth : "<<auth_type_<< " content : " << content_ << endl;
+
 }
 
 string Request::GetParameter(const string& name, const string& default_value) const
 {
-    map<string, string>::const_iterator it_param = params.find(name);
+    map<string, string>::const_iterator it_param = params_.find(name);
 
-    if(it_param != params.end())
+    if(it_param != params_.end())
     {
         return it_param->second;
     }
@@ -102,11 +134,39 @@ string Request::GetParameter(const string& name, const string& default_value) co
     
 }
 
+
+/**
+ * Searches the header of key name. The name parameter is not case sensitive.
+ * @brief Request::GetHeader
+ * @param name
+ * @param default_value
+ * @return
+ */
+string Request::GetHeader(const string& name, const string& default_value) const
+{
+
+    string upper(name);
+
+    transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+
+    map<string, string>::const_iterator it_header = headers_.find(upper);
+
+    if(it_header != headers_.end())
+    {
+        return it_header->second;
+    }
+    else
+    {
+        return default_value;
+    }
+
+}
+
 string Request::GetQueryParameter(const string& parameter_name, const string& default_value) const
 {
-    map<string,string>::const_iterator it = query_params.find(parameter_name);
+    map<string,string>::const_iterator it = query_params_.find(parameter_name);
 
-    if(it!=query_params.end()){
+    if(it!=query_params_.end()){
         return it->second;
     }
     else

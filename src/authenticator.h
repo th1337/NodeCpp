@@ -1,6 +1,7 @@
 #ifndef AUTHENTICATOR_H
 #define AUTHENTICATOR_H
 
+
 #include "request.h"
 #include "user.h"
 
