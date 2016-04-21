@@ -18,6 +18,7 @@ public:
     static const string TOKEN_PARAM;
 
     NodeAuthenticator(TokenGenerator* generator);
+    virtual ~NodeAuthenticator();
     
     virtual User* HandleUser(const Request& request);
     

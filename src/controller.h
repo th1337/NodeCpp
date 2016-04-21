@@ -8,7 +8,7 @@
 
 using namespace std;
 
-#define NODECPP_ACTION(controller_action) static_cast<Controller::ControllerAction>(controller_action)
+#define NODECPP_ACTION(controller_action) static_cast<Controller::ControllerAction>(&controller_action)
 
 namespace NodeCpp 
 {

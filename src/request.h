@@ -26,6 +26,8 @@ namespace NodeCpp
         void SetParameters(const map<string, string>& parameters) { params = parameters; }
         void PrintInfos(ostream& stream) const;
         void SetUser(User* user);
+        
+        static void ExtractQueryParameters(string s, map<string,string> & parameters);
 
     private :
         string method;

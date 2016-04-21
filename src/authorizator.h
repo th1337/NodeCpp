@@ -1,6 +1,8 @@
 #ifndef AUTHORIZATOR_H
 #define AUTHORIZATOR_H
 
+#include "request.h"
+
 namespace NodeCpp
 {
 

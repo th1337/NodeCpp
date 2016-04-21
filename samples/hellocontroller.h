@@ -8,7 +8,7 @@ using namespace NodeCpp;
 class HelloController : public Controller
 {
 public:
-    HelloController(){}
+    HelloController();
     ~HelloController();
     void Init();
     void PreDispatch();

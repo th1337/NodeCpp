@@ -2,10 +2,17 @@
 
 using namespace std;
 
-HelloApplication::HelloApplication()
+ostream* HelloApplication::debug_console = nullptr;
+
+HelloApplication::HelloApplication() : 
+    token_generator_(42),
+    authenticator_(&token_generator_),
+    security_controller_(authenticator_)
 {
-    AddController(&hello_controller);
-    AddController(&sort_controller);
+    AddController(&hello_controller_);
+    AddController(&sort_controller_);
+    
+    debug_console = &console;
 }
 
 HelloApplication::~HelloApplication()
@@ -16,8 +23,10 @@ HelloApplication::~HelloApplication()
 void HelloApplication::InitRoutes()
 {
    //Here, add the routes
-   AddRoute("/", NODECPP_ACTION(&HelloController::HtmlHelloWorld), &hello_controller);
-   AddRoute("hello/{name}/world", NODECPP_ACTION(&HelloController::HtmlHelloWorldNominative), &hello_controller);
-   AddRoute("/sort", NODECPP_ACTION(&SortController::Sort), &sort_controller);
+   AddRoute("/", NODECPP_ACTION(HelloController::HtmlHelloWorld), &hello_controller_);
+   AddRoute("/sort", NODECPP_ACTION(SortController::Sort), &sort_controller_);
+   AddRoute("/security/login", NODECPP_ACTION(SecurityController::Login), &security_controller_, &authenticator_);
+   AddRoute("/security/secret-code", NODECPP_ACTION(SecurityController::SecretAction), &security_controller_, &authenticator_, &authorizator_);
+   AddRoute("hello/{name}/world", NODECPP_ACTION(HelloController::HtmlHelloWorldNominative), &hello_controller_);
 }
 

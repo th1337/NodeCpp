@@ -26,7 +26,7 @@ Route Router::Match(Request& request)
         //Test whether the firewall accept the request.
         if (route.GetFirewall() != nullptr && !route.GetFirewall()->Accept(request))
         {
-            return Route(error_controller_, NODECPP_ACTION(&ErrorController::Error403));
+            return Route(error_controller_, NODECPP_ACTION(ErrorController::Error403));
         }
         
         //Authentication of the user.
@@ -41,12 +41,12 @@ Route Router::Match(Request& request)
             if (request.GetUser()->IsAnonymous())
             {
                 //The User is not authenticated.
-                return Route(error_controller_, NODECPP_ACTION(&ErrorController::Error401));
+                return Route(error_controller_, NODECPP_ACTION(ErrorController::Error401));
             }
             else
             {
                 //This route is forbidden for the User.
-                return Route(error_controller_, NODECPP_ACTION(&ErrorController::Error403));
+                return Route(error_controller_, NODECPP_ACTION(ErrorController::Error403));
             }
         }
         
@@ -54,7 +54,7 @@ Route Router::Match(Request& request)
         return route;
     }
     
-    return Route(error_controller_, NODECPP_ACTION(&ErrorController::Error404));
+    return Route(error_controller_, NODECPP_ACTION(ErrorController::Error404));
 }
 
 

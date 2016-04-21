@@ -45,38 +45,8 @@ string get_request_content(const FCGX_Request & request)
     do cin.ignore(1024); while (cin.gcount() == 1024);
 
     string content(content_buffer, content_length);
-    delete [] content_buffer;
+    delete[] content_buffer;
     return content;
-}
-
-void ExtractQueryParameters(string s, map<string,string> & parameters)
-{
-    std::string delimiter = "&";
-    std::string equal = "=";
-
-    size_t pos = 0;
-    std::string token;
-    while ((pos = s.find(delimiter)) != std::string::npos) {
-        token = s.substr(0, pos);
-        if(token.length()>0){ // we have a parameter assignement (x=y)
-
-            int position_eq = token.find(equal);
-            string var_name = token.substr(0, position_eq);
-            string var_value = token.substr(position_eq+1, token.length());
-
-            parameters[var_name] = var_value;
-        }
-        s.erase(0, pos + delimiter.length());
-    }
-
-    if(s.size()>0){
-        int position_eq = s.find(equal);
-        string var_name = s.substr(0, position_eq);
-        string var_value = s.substr(position_eq+1, s.length());
-
-        parameters[var_name] = var_value;
-    }
-
 }
 
 Request::Request() : user_(nullptr)
@@ -149,4 +119,34 @@ string Request::GetQueryParameter(const string& parameter_name, const string& de
 void Request::SetUser(User* user)
 {
     user_ = user;
+}
+
+void Request::ExtractQueryParameters(string s, map<string,string> & parameters)
+{
+    std::string delimiter = "&";
+    std::string equal = "=";
+
+    size_t pos = 0;
+    std::string token;
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = s.substr(0, pos);
+        if(token.length()>0){ // we have a parameter assignement (x=y)
+
+            int position_eq = token.find(equal);
+            string var_name = token.substr(0, position_eq);
+            string var_value = token.substr(position_eq+1, token.length());
+
+            parameters[var_name] = var_value;
+        }
+        s.erase(0, pos + delimiter.length());
+    }
+
+    if(s.size()>0){
+        int position_eq = s.find(equal);
+        string var_name = s.substr(0, position_eq);
+        string var_value = s.substr(position_eq+1, s.length());
+
+        parameters[var_name] = var_value;
+    }
+
 }

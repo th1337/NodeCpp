@@ -5,6 +5,11 @@
 
 using namespace std;
 
+HelloController::HelloController()
+{
+
+}
+
 HelloController::~HelloController()
 {
 
