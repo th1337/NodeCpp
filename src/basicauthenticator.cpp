@@ -4,6 +4,8 @@
 
 using namespace NodeCpp;
 
+const string BasicAuthenticator::PREFIX = "Basic";
+const string BasicAuthenticator::AUTHORIZATION = "Authorization";
 
 BasicAuthenticator::BasicAuthenticator()
 {
@@ -14,21 +16,20 @@ BasicAuthenticator::BasicAuthenticator()
  * Extracts basic auth credentials. If the credentials are not well-formed, the returned pair is empty.
  * @brief ExtractCredentials
  * @param b64_credentials
- * @return
+ * @return A pair <username, password> or an empty pair. 
  */
-pair<string, string> ExtractCredentials(string b64_credentials){
+pair<string, string> ExtractCredentials(string b64_credentials) {
 
     string decoded(base64_decode(b64_credentials));
 
     int index_sep = decoded.find(':');
 
-    if(index_sep != string::npos && index_sep != 0 && index_sep != decoded.length() - 1){
+    if(index_sep != string::npos && index_sep != 0 && index_sep != decoded.length() - 1) {
 
         string username(decoded.substr(0, index_sep));
         string password(decoded.substr(index_sep + 1, decoded.length()));
 
         return make_pair(username, password);
-
     }
 
     return make_pair("", "");
@@ -36,10 +37,11 @@ pair<string, string> ExtractCredentials(string b64_credentials){
 
 User* BasicAuthenticator::HandleUser(const Request& request)
 {
+    const string DEFAULT_AUTH_VALUE("null");
 
-    string auth(request.GetHeader(AUTHORIZATION, "null"));
+    string auth(request.GetHeader(AUTHORIZATION, DEFAULT_AUTH_VALUE));
 
-    if(auth.compare("null") != 0){ //there is potentially an user
+    if(auth.compare(DEFAULT_AUTH_VALUE) != 0){ //there is potentially an user
 
         if(auth.length() > PREFIX.length() + 2){ //there is a space between the prefix and the authent string
 
@@ -55,12 +57,10 @@ User* BasicAuthenticator::HandleUser(const Request& request)
 
                     return user;
                 }
-
             }
         }
     }
 
-
-    return new AnonymousUser; //protocol issue
+    return new AnonymousUser(); //protocol issue
 }
 

@@ -50,34 +50,6 @@ string get_request_content(const FCGX_Request & request)
     return content;
 }
 
-void ExtractRequestHeaders(char** env, map<string, string> & headers)
-{
-
-    string user_prefix = "HTTP_";
-
-    while (*(++env)){ //iterate through the env variables
-
-        string header(*env);
-
-        if(header.length() > user_prefix.length()){
-
-            string prefix(header.substr(0, user_prefix.length()));
-
-            if(prefix.compare(user_prefix) == 0){ //we have a user header
-
-                string header_cleaned(header.substr(user_prefix.length(), header.length()));
-
-                int index_equal = header_cleaned.find('=');
-
-                string header_value(header_cleaned.substr(index_equal+1, header_cleaned.length()));
-                string header_name(header_cleaned.substr(0, index_equal));
-
-                headers[header_name] = header_value;
-            }
-        }
-    }
-}
-
 Request::Request() : user_(nullptr)
 {
     
@@ -209,4 +181,32 @@ void Request::ExtractQueryParameters(string s, map<string,string> & parameters)
         parameters[var_name] = var_value;
     }
 
+}
+
+void Request::ExtractRequestHeaders(char** env, map<string, string>& headers)
+{
+
+    const string USER_PREFIX = "HTTP_";
+
+    while (*(++env)){ //iterate through the env variables
+
+        string header(*env);
+
+        if(header.length() > USER_PREFIX.length()){
+
+            string prefix(header.substr(0, USER_PREFIX.length()));
+
+            if(prefix.compare(USER_PREFIX) == 0){ //we have a user header
+
+                string header_cleaned(header.substr(USER_PREFIX.length(), header.length()));
+
+                int index_equal = header_cleaned.find('=');
+
+                string header_value(header_cleaned.substr(index_equal+1, header_cleaned.length()));
+                string header_name(header_cleaned.substr(0, index_equal));
+
+                headers[header_name] = header_value;
+            }
+        }
+    }
 }

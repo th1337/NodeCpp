@@ -44,14 +44,10 @@ User* InMemoryAuthenticator::AuthenticateUser(const string& login, const string&
 
 void InMemoryAuthenticator::StoreToken(const string& token, const User* user)
 {
-    try
+    const CustomUser* customUser = dynamic_cast<const CustomUser*>(user);
+    
+    if (customUser != nullptr)
     {
-        const CustomUser* customUser = dynamic_cast<const CustomUser*>(user);
-        
         tokens_[token] = customUser->GetId();
-    }
-    catch (bad_cast& bc)
-    {
-        //Error
     }
 }

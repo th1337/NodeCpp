@@ -50,9 +50,6 @@ Route Router::Match(Request& request)
                 //This route is forbidden for the User.
                 return Route(route.GetController(), NODECPP_ACTION(Controller::Error403));
             }
-        }else if(route.GetAuthorizator() == nullptr && request.GetUser()->IsAnonymous()){
-            //The User is not authenticated.
-            return Route(route.GetController(), NODECPP_ACTION(Controller::Error401));
         }
         
         //The Firewall accepts the request, or no firewall is defined for this route.

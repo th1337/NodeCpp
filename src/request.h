@@ -31,6 +31,7 @@ namespace NodeCpp
         void SetUser(User* user);
         
         static void ExtractQueryParameters(string s, map<string,string> & parameters);
+        static void ExtractRequestHeaders(char** env, map<string, string>& headers);
 
     private :
         string method_;

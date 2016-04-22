@@ -9,9 +9,8 @@ namespace NodeCpp
 class BasicAuthenticator : public Authenticator
 {
 public:
-    const string PREFIX = "Basic";
-    const string AUTHORIZATION = "Authorization";
-
+    static const string PREFIX;
+    static const string AUTHORIZATION;
 
     BasicAuthenticator();
 
@@ -21,7 +20,7 @@ public:
      * The User has to be dynamically allocated in this method.
      * @return The User.
      */
-    virtual User* HandleUser(const Request& request) final;
+    virtual User* HandleUser(const Request& request) override final;
 
 
     /**

@@ -13,14 +13,14 @@ bool CustomAuthorizator::Accept(const Request& request)
     
     if (!rawUser->IsAnonymous())
     {
-        try
+        const CustomUser* customUser = dynamic_cast<const CustomUser*>(rawUser);
+        
+        if (customUser != nullptr)
         {
-            const CustomUser* customUser = dynamic_cast<const CustomUser*>(rawUser);
-            
             //Only the user whose id is 1 is accepted.
             return (customUser->GetId() == 1);
         }
-        catch (bad_cast& bc)
+        else
         {
             //Error, not a CustomUser.
             return false;
