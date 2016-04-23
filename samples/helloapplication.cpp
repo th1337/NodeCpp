@@ -22,7 +22,7 @@ void HelloApplication::InitRoutes()
    //Here, add the routes
    AddRoute("/", NODECPP_ACTION(HelloController::HtmlHelloWorld), &hello_controller_);
    AddRoute("/sort", NODECPP_ACTION(SortController::Sort), &sort_controller_);
-   AddRoute("/security/login", NODECPP_ACTION(SecurityController::Login), &security_controller_, &authenticator_);
+   AddRoute("/security/login", NODECPP_ACTION(SecurityController::LogIn), &security_controller_, &authenticator_);
    AddRoute("/security/secret-code", NODECPP_ACTION(SecurityController::SecretAction), &security_controller_, &authenticator_, &authorizator_);
    AddRoute("/security/basic", NODECPP_ACTION(HelloBasicAuthController::HtmlHelloWorldProtected), &basic_controller_, &basic_authenticator_, &basic_authorizator_);
    AddRoute("hello/{name}/world", NODECPP_ACTION(HelloController::HtmlHelloWorldNominative), &hello_controller_);
