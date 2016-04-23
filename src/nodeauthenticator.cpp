@@ -44,3 +44,7 @@ string NodeAuthenticator::LogIn(const string& login, const string& password) {
     
     return token;
 }
+
+void NodeAuthenticator::LogOut(const string& token) {
+    RemoveToken(token);
+}

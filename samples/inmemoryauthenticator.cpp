@@ -51,3 +51,8 @@ void InMemoryAuthenticator::StoreToken(const string& token, const User* user)
         tokens_[token] = customUser->GetId();
     }
 }
+
+void InMemoryAuthenticator::RemoveToken(const string& token)
+{
+    tokens_.erase(token);
+}

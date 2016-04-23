@@ -27,6 +27,11 @@ public:
      * Return an authentication token for the user.
      */
     virtual string LogIn(const string& login, const string& password);
+    
+    /**
+     * Logout the user with his token.
+     */
+    virtual void LogOut(const string& token);
 
 protected :
     
@@ -47,6 +52,12 @@ protected :
      * This method is called when the user is logged in, to store his token.
      */
     virtual void StoreToken(const string& token, const User* user) = 0;
+    
+    /**
+     * Remove an authentication token.
+     * This method is called when the user is logged out, to remove his token.
+     */
+    virtual void RemoveToken(const string& token) = 0;
 
 private :
     TokenGenerator* tokenGenerator_;
