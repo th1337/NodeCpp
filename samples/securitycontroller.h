@@ -21,6 +21,11 @@ public:
     Response LogIn(const Request& request);
     
     /**
+     * This action is used to log out an user.
+     */
+    Response LogOut(const Request& request);
+    
+    /**
      * This action is a secret action accessible only by authorized users.
      */
     Response SecretAction(const Request& request);

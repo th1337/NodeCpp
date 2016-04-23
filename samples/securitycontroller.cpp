@@ -51,11 +51,11 @@ Response SecurityController::LogIn(const Request& request)
             
             if (!token.empty())
             {
-                response_stream << "Your token : " << token << "\n";
+                response_stream << "<p>Your token : " << token << "</p>\n";
             }
             else
             {
-                response_stream << "Bad credentials.\n";
+                response_stream << "<p>Bad credentials.</p>\n";
             }
         }
         
@@ -86,9 +86,25 @@ Response SecurityController::LogIn(const Request& request)
     return response;
 }
 
+Response SecurityController::LogOut(const Request& request)
+{
+    Response response;
+    string token(authenticator_.ReadToken(request));
+    
+    //Log the user out of the authenticator.
+    authenticator_.LogOut(token);
+    
+    //Redirect the user to the login page.
+    response.SetStatusCode(302);
+    response.SetHeader("location", "login");
+
+    return response;
+}
+
 Response SecurityController::SecretAction(const Request& request)
 {
     Response response;
+    string token(authenticator_.ReadToken(request));
 
     stringstream response_stream;
     response_stream << "<html>\n"
@@ -98,6 +114,7 @@ Response SecurityController::SecretAction(const Request& request)
                     << "  <body>\n"
                     << "    <h1>Secret code</h1>\n"
                     << "    <p>The secret code is 42.</p>\n"
+                    << "    <p><a href=\"logout?token=" << token << "\">Logout</a></p>\n"
                     << "  </body>\n"
                     << "</html>\n";
 

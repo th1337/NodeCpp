@@ -19,7 +19,7 @@ NodeAuthenticator::~NodeAuthenticator()
 }
 
 User* NodeAuthenticator::HandleUser(const Request &request) {
-    string token = request.GetQueryParameter(TOKEN_PARAM, "");
+    string token = ReadToken(request);
     
     if(!token.empty()) {
         //There is a token in the request.
@@ -30,6 +30,10 @@ User* NodeAuthenticator::HandleUser(const Request &request) {
     }
     //Return an anonymous User.
     return new AnonymousUser();
+}
+
+string NodeAuthenticator::ReadToken(const Request& request) {
+    return request.GetQueryParameter(TOKEN_PARAM, "");
 }
 
 string NodeAuthenticator::LogIn(const string& login, const string& password) {

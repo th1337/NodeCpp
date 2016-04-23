@@ -20,7 +20,15 @@ public:
     NodeAuthenticator(TokenGenerator* generator);
     virtual ~NodeAuthenticator();
     
+    /**
+     * Handle a request and try to authenticate an user.
+     */
     virtual User* HandleUser(const Request& request);
+    
+    /**
+     * Read the authentication token in the request.
+     */
+    virtual string ReadToken(const Request& request);
     
     /**
      * Log the user in the NodeAuthenticator.
