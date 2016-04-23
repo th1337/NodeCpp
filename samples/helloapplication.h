@@ -9,6 +9,7 @@
 #include "customauthorizator.h"
 #include "hellobasicauthcontroller.h"
 #include "hellobasicauthauthenticator.h"
+#include "hellobasicauthauthorizator.h"
 
 using namespace NodeCpp;
 
@@ -26,6 +27,7 @@ private :
     InMemoryAuthenticator authenticator_;
     HelloBasicAuthAuthenticator basic_authenticator_;
     CustomAuthorizator authorizator_;
+    HelloBasicAuthAuthorizator basic_authorizator_;
 
     HelloController hello_controller_;
     SortController sort_controller_;
