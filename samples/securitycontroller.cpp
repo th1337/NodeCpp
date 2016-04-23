@@ -29,7 +29,7 @@ void SecurityController::PostDispatch()
 
 }
 
-Response SecurityController::Login(const Request& request)
+Response SecurityController::LogIn(const Request& request)
 {
     Response response;
     stringstream response_stream;
@@ -48,7 +48,15 @@ Response SecurityController::Login(const Request& request)
         if (itLogin != parameters.end() and itPassword != parameters.end())
         {   
             string token = authenticator_.LogIn(itLogin->second, itPassword->second);
-            response_stream << "token : " << token << "\n";
+            
+            if (!token.empty())
+            {
+                response_stream << "Your token : " << token << "\n";
+            }
+            else
+            {
+                response_stream << "Bad credentials.\n";
+            }
         }
         
         response.SetHeader("Content-Type", "text/html");
