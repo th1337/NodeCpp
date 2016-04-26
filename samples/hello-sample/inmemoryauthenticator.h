@@ -31,6 +31,12 @@ protected:
      * This method is called when the user is logged in, to store his token.
      */
     virtual void StoreToken(const string& token, const User* user);
+    
+    /**
+     * Remove an authentication token.
+     * This method is called when the user is logged out, to remove his token.
+     */
+    virtual void RemoveToken(const string& token);
 
 private:
     map<string, int> tokens_;

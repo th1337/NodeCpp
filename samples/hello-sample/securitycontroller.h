@@ -18,7 +18,12 @@ public:
     /**
      * This action is used to log an user in the application.
      */
-    Response Login(const Request& request);
+    Response LogIn(const Request& request);
+    
+    /**
+     * This action is used to log out an user.
+     */
+    Response LogOut(const Request& request);
     
     /**
      * This action is a secret action accessible only by authorized users.
