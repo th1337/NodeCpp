@@ -14,7 +14,7 @@ file(
 
 )
 
-include_directories(../src)
+include_directories(../../src)
 
 #Déclaration de l'exécutable
 
@@ -27,5 +27,5 @@ add_executable(
 )
 target_compile_features(main PRIVATE cxx_range_for)
 target_link_libraries(main -lfcgi++ -lfcgi)
-find_library(LIBNODECPP_LIBRARY nodecpp HINT ../build)
+find_library(LIBNODECPP_LIBRARY nodecpp HINT ../../build)
 target_link_libraries (main ${LIBNODECPP_LIBRARY})
