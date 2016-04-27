@@ -1,11 +1,11 @@
 #ifndef TODOCONTROLLER_H
 #define TODOCONTROLLER_H
 
-#include "controller.h"
+#include "basicauthcontroller.h"
 
 using namespace NodeCpp;
 
-class TodoController : public Controller
+class TodoController : public BasicAuthController
 {
 public:
     TodoController();

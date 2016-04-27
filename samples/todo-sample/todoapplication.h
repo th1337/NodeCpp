@@ -4,6 +4,8 @@
 #include "application.h"
 #include "todocontroller.h"
 #include "todofirewall.h"
+#include "hellobasicauthauthenticator.h"
+#include "hellobasicauthauthorizator.h"
 
 using namespace NodeCpp;
 
@@ -19,6 +21,10 @@ protected:
 private :
     TodoFirewall todoFirewall_;
     TodoController todoController_;
+
+    HelloBasicAuthAuthenticator authenticator_;
+    HelloBasicAuthAuthorizator authorizator_;
+
 
 };
 
