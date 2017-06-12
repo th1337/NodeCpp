@@ -23,6 +23,7 @@ namespace NodeCpp
         string GetContent() const { return content_; }
         string GetAuthType() const { return auth_type_; }
         User* GetUser() const { return user_; };
+        bool HasParameter(const string& name) const;
         string GetParameter(const string& name, const string& default_value) const;
         string GetQueryParameter(const string& parameter_name, const string& default_value) const;
         string GetHeader(const string& name, const string& default_value) const;

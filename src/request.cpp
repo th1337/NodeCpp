@@ -91,6 +91,13 @@ void Request::PrintInfos(ostream &stream) const
 
 }
 
+bool Request::HasParameter(const string& name) const
+{
+    map<string, string>::const_iterator it_param = params_.find(name);
+
+    return it_param != params_.end();
+}
+
 string Request::GetParameter(const string& name, const string& default_value) const
 {
     map<string, string>::const_iterator it_param = params_.find(name);
